@@ -133,6 +133,7 @@ export default function MyJobs() {
   async function selectInstructor(requestId: string, offer: Offer) {
     setMessage("");
     setMessageStatus("idle");
+    setOfferMessages((current) => ({ ...current, [offer.id]: "" }));
 
     const [requestResult, offerResult] = await Promise.all([
       supabase
@@ -164,8 +165,12 @@ export default function MyJobs() {
       }).catch(() => null);
     }
 
-    setMessage("Instructor selected. Next step is agreement and payment.");
+    setMessage("Instructor selected. Review the agreement next, then send it to the instructor.");
     setMessageStatus("success");
+    setOfferMessages((current) => ({
+      ...current,
+      [offer.id]: "Instructor selected. Please click Review agreement next, check the booking details, then send it to the instructor.",
+    }));
     loadMyJobs();
   }
 
@@ -495,9 +500,12 @@ export default function MyJobs() {
                       {offerMessages[offer.id] && (
                         <p
                           className={
-                            offerMessages[offer.id].includes("sent")
-                              ? "formMessage"
-                              : "formMessage error"
+                            offerMessages[offer.id].includes("missing") ||
+                            offerMessages[offer.id].includes("Please sign in") ||
+                            offerMessages[offer.id].includes("Select this instructor") ||
+                            offerMessages[offer.id].includes("Could not")
+                              ? "formMessage error"
+                              : "formMessage"
                           }
                         >
                           {offerMessages[offer.id]}
