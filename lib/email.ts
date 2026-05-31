@@ -41,8 +41,15 @@ export async function sendBookAnInstructorEmail({
 
   if (!response.ok) {
     const body = await response.text();
+    let message = body;
+    try {
+      const parsed = JSON.parse(body) as { message?: string; error?: string; name?: string };
+      message = parsed.message || parsed.error || parsed.name || body;
+    } catch {
+      message = body;
+    }
     console.error("Resend email failed:", { to, subject, body });
-    return { error: "Could not send email." };
+    return { error: message || "Could not send email." };
   }
 
   return { sent: true };
