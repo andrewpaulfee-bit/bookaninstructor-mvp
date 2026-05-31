@@ -99,13 +99,13 @@ export default function AdminJobReview() {
             ? "job_rejected"
             : "";
 
-    if (!event) return;
+    if (!event) return "";
 
     const { data: sessionData } = await supabase.auth.getSession();
     const token = sessionData.session?.access_token;
-    if (!token) return;
+    if (!token) return "Email notification not sent because the admin session was missing.";
 
-    await fetch("/api/notifications/event", {
+    const response = await fetch("/api/notifications/event", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -113,6 +113,15 @@ export default function AdminJobReview() {
       },
       body: JSON.stringify({ event, id: params.id }),
     }).catch(() => null);
+
+    if (!response) return "Email notification could not be checked.";
+
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) return `Email notification failed: ${result.error || "Unknown error"}`;
+    if (result.sent) return " Email notification sent.";
+    if (result.skipped) return ` Email notification skipped: ${result.reason || "Unknown reason"}`;
+    if (result.error) return ` Email notification failed: ${result.error}`;
+    return " Email notification checked.";
   }
 
   async function saveJob(nextStatus?: string, reviewNotesOverride?: string) {
@@ -163,13 +172,13 @@ export default function AdminJobReview() {
     }
 
     setForm((current) => ({ ...current, status, review_notes: reviewNotes }));
-    await notifyStatus(status);
+    const notificationMessage = await notifyStatus(status);
     setMessage(
-      status === "open"
+      (status === "open"
         ? "Job approved and published."
         : status === "needs_changes"
           ? "Change request sent to the client."
-          : "Job saved."
+          : "Job saved.") + notificationMessage
     );
   }
 

@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const resendApiKey = process.env.RESEND_API_KEY;
 const resendFromEmail =
   process.env.RESEND_FROM_EMAIL || "BookAnInstructor <notifications@bookaninstructor.com>";
@@ -32,7 +33,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Supabase environment is missing." }, { status: 500 });
   }
 
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  const supabase = createClient(supabaseUrl, serviceRoleKey || supabaseAnonKey);
   const table = type === "job" ? "client_requests" : "instructors";
   const { data, error } = await supabase.from(table).select("*").eq("id", id).maybeSingle();
 
@@ -129,6 +130,8 @@ export async function POST(request: Request) {
   });
 
   if (!emailResult.ok) {
+    const body = await emailResult.text();
+    console.error("Submission notification email failed:", body);
     return NextResponse.json(
       { error: "Could not send submission notification email." },
       { status: 502 }
