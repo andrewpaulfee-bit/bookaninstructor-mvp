@@ -115,11 +115,19 @@ export default function AdminJobReview() {
     }).catch(() => null);
   }
 
-  async function saveJob(nextStatus?: string) {
+  async function saveJob(nextStatus?: string, reviewNotesOverride?: string) {
     setMessage("");
     setIsError(false);
 
     const status = nextStatus || form.status;
+    const reviewNotes = reviewNotesOverride ?? form.review_notes;
+
+    if (status === "needs_changes" && !reviewNotes.trim()) {
+      setIsError(true);
+      setMessage("Add review notes before sending this back to the client.");
+      return;
+    }
+
     const { error } = await supabase
       .from("client_requests")
       .update({
@@ -144,7 +152,7 @@ export default function AdminJobReview() {
         details: form.details || null,
         category: form.style || "Instructor request",
         status,
-        review_notes: form.review_notes || null,
+        review_notes: reviewNotes || null,
       })
       .eq("id", params.id);
 
@@ -154,9 +162,32 @@ export default function AdminJobReview() {
       return;
     }
 
-    setForm((current) => ({ ...current, status }));
+    setForm((current) => ({ ...current, status, review_notes: reviewNotes }));
     await notifyStatus(status);
-    setMessage(status === "open" ? "Job approved and published." : "Job saved.");
+    setMessage(
+      status === "open"
+        ? "Job approved and published."
+        : status === "needs_changes"
+          ? "Change request sent to the client."
+          : "Job saved."
+    );
+  }
+
+  async function requestChanges() {
+    const notes = window.prompt(
+      "What changes should the client make before this listing can be approved?",
+      form.review_notes
+    );
+
+    if (notes === null) return;
+
+    if (!notes.trim()) {
+      setIsError(true);
+      setMessage("Add review notes before sending this back to the client.");
+      return;
+    }
+
+    await saveJob("needs_changes", notes.trim());
   }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -183,7 +214,7 @@ export default function AdminJobReview() {
             <button className="btn" type="button" onClick={() => saveJob("open")}>
               Approve / publish
             </button>
-            <button className="secondaryButton" type="button" onClick={() => saveJob("needs_changes")}>
+            <button className="secondaryButton" type="button" onClick={requestChanges}>
               Needs changes
             </button>
             <button className="secondaryButton" type="button" onClick={() => saveJob("rejected")}>
