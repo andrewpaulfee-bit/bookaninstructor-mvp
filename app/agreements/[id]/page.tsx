@@ -566,7 +566,7 @@ export default function AgreementPage() {
                 </button>
               )}
 
-              {agreement.status === "accepted" && (
+              {agreement.status === "accepted" && !message && (
                 <p className="formMessage">
                   {agreement.payment_status === "paid"
                     ? "Payment received. Booking confirmed."
