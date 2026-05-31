@@ -132,11 +132,19 @@ export default function ConversationPage() {
   }, [params.id]);
 
   async function sendNotification(messageId: string) {
-    await fetch("/api/messages/notify", {
+    const response = await fetch("/api/messages/notify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ conversationId: params.id, messageId }),
     }).catch(() => null);
+
+    if (!response) return "Message sent, but email notification could not be checked.";
+
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) return `Message sent, but email notification failed: ${result.error || "Unknown error"}`;
+    if (result.sent) return "Message sent. Email notification sent.";
+    if (result.skipped) return `Message sent. Email notification skipped: ${result.reason || "Unknown reason"}`;
+    return "Message sent.";
   }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -181,7 +189,12 @@ export default function ConversationPage() {
     setMessageBody("");
     setStatus("idle");
     await loadConversation();
-    if (data?.id) await sendNotification(data.id);
+    if (data?.id) {
+      const notificationNotice = await sendNotification(data.id);
+      setNotice(notificationNotice || "Message sent.");
+    } else {
+      setNotice("Message sent.");
+    }
   }
 
   return (

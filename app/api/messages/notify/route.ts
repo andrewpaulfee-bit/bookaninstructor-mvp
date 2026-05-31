@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const resendApiKey = process.env.RESEND_API_KEY;
 const resendFromEmail =
   process.env.RESEND_FROM_EMAIL || "BookAnInstructor <notifications@bookaninstructor.com>";
@@ -18,7 +19,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Supabase environment is missing." }, { status: 500 });
   }
 
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  const supabase = createClient(supabaseUrl, serviceRoleKey || supabaseAnonKey);
 
   const [{ data: conversation }, { data: message }] = await Promise.all([
     supabase
@@ -88,10 +89,15 @@ export async function POST(request: Request) {
   });
 
   if (!emailResult.ok) {
-    return NextResponse.json(
-      { error: "Could not send notification email." },
-      { status: 502 }
-    );
+    const body = await emailResult.text();
+    let message = body;
+    try {
+      const parsed = JSON.parse(body) as { message?: string; error?: string; name?: string };
+      message = parsed.message || parsed.error || parsed.name || body;
+    } catch {
+      message = body;
+    }
+    return NextResponse.json({ error: message || "Could not send notification email." }, { status: 502 });
   }
 
   return NextResponse.json({ sent: true });
