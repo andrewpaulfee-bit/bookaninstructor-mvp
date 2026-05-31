@@ -108,6 +108,32 @@ export default function AdminInstructorReview() {
     setter(values.includes(value) ? values.filter((item) => item !== value) : [...values, value]);
   }
 
+  async function notifyStatus(reviewStatus: string) {
+    const event =
+      reviewStatus === "approved"
+        ? "instructor_approved"
+        : reviewStatus === "needs_changes"
+          ? "instructor_needs_changes"
+          : reviewStatus === "rejected"
+            ? "instructor_rejected"
+            : "";
+
+    if (!event) return;
+
+    const { data: sessionData } = await supabase.auth.getSession();
+    const token = sessionData.session?.access_token;
+    if (!token) return;
+
+    await fetch("/api/notifications/event", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ event, id: params.id }),
+    }).catch(() => null);
+  }
+
   async function saveInstructor(nextStatus?: string) {
     setMessage("");
     setIsError(false);
@@ -148,6 +174,7 @@ export default function AdminInstructorReview() {
     }
 
     setForm((current) => ({ ...current, name, review_status: reviewStatus }));
+    await notifyStatus(reviewStatus);
     setMessage(approved ? "Instructor approved and published." : "Instructor saved.");
   }
 

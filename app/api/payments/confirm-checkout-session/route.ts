@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { actionButton, appBaseUrl, sendBookAnInstructorEmail } from "../../../../lib/email";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -65,7 +66,7 @@ export async function POST(request: Request) {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
   const { data: agreement, error } = await supabase
     .from("booking_agreements")
-    .select("id,request_id")
+    .select("id,request_id,contract_number,job_title,total_fee,client_name,instructor_name,request:client_requests(client_email,title),instructor:instructors(email,name)")
     .eq("id", agreementId)
     .maybeSingle();
 
@@ -91,6 +92,48 @@ export async function POST(request: Request) {
     .from("client_requests")
     .update({ status: "booking_confirmed" })
     .eq("id", agreement.request_id);
+
+  const requestData = Array.isArray(agreement.request) ? agreement.request[0] : agreement.request;
+  const instructorData = Array.isArray(agreement.instructor)
+    ? agreement.instructor[0]
+    : agreement.instructor;
+  const agreementUrl = `${appBaseUrl}/agreements/${agreement.id}`;
+  const title = agreement.job_title || requestData?.title || "your booking";
+  const contract = agreement.contract_number || agreement.id.slice(0, 8);
+
+  await Promise.all([
+    sendBookAnInstructorEmail({
+      to: requestData?.client_email,
+      subject: `Payment received for ${title}`,
+      html: `
+        <h1>Payment received</h1>
+        <p>Your booking is confirmed.</p>
+        <p><strong>Contract:</strong> ${contract}</p>
+        <p><strong>Total fee:</strong> ${agreement.total_fee ? `$${agreement.total_fee}` : "Paid"}</p>
+        ${actionButton("View agreement", agreementUrl)}
+      `,
+      text: [
+        "Payment received. Your booking is confirmed.",
+        `Contract: ${contract}`,
+        `View agreement: ${agreementUrl}`,
+      ].join("\n\n"),
+    }),
+    sendBookAnInstructorEmail({
+      to: instructorData?.email,
+      subject: `Booking confirmed: ${title}`,
+      html: `
+        <h1>Booking confirmed</h1>
+        <p>The client has paid and the booking is confirmed.</p>
+        <p><strong>Contract:</strong> ${contract}</p>
+        ${actionButton("View agreement", agreementUrl)}
+      `,
+      text: [
+        "Booking confirmed. The client has paid.",
+        `Contract: ${contract}`,
+        `View agreement: ${agreementUrl}`,
+      ].join("\n\n"),
+    }),
+  ]);
 
   return NextResponse.json({ paid: true });
 }

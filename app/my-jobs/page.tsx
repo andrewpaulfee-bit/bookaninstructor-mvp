@@ -151,6 +151,19 @@ export default function MyJobs() {
       return;
     }
 
+    const { data: sessionData } = await supabase.auth.getSession();
+    const token = sessionData.session?.access_token;
+    if (token) {
+      await fetch("/api/notifications/event", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ event: "instructor_selected", id: offer.id }),
+      }).catch(() => null);
+    }
+
     setMessage("Instructor selected. Next step is agreement and payment.");
     setMessageStatus("success");
     loadMyJobs();

@@ -196,6 +196,19 @@ export default function JobDetail() {
         },
         { onConflict: "request_id,instructor_id" }
       );
+
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (token) {
+        await fetch("/api/notifications/event", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ event: "offer_submitted", id: offer.id }),
+        }).catch(() => null);
+      }
     }
 
     setStatus("success");

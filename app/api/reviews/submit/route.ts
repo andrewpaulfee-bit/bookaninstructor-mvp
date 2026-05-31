@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { appBaseUrl, sendBookAnInstructorEmail } from "../../../../lib/email";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -15,10 +16,40 @@ type Agreement = {
   instructor_user_id: string | null;
   client_name: string | null;
   instructor_name: string | null;
+  job_title: string | null;
   class_completed_at: string | null;
   client_review_submitted_at: string | null;
   instructor_review_submitted_at: string | null;
+  request?: { client_email: string | null } | { client_email: string | null }[] | null;
+  instructor?: { email: string | null } | { email: string | null }[] | null;
 };
+
+function one<T>(value: T | T[] | null | undefined): T | null {
+  if (Array.isArray(value)) return value[0] || null;
+  return value || null;
+}
+
+async function sendReviewsCompletedEmail(agreement: Agreement) {
+  const requestData = one(agreement.request);
+  const instructorData = one(agreement.instructor);
+  const agreementUrl = `${appBaseUrl}/agreements/${agreement.id}`;
+  const subject = `Reviews completed for ${agreement.job_title || "your booking"}`;
+
+  await Promise.all([
+    sendBookAnInstructorEmail({
+      to: requestData?.client_email,
+      subject,
+      html: `<h1>Reviews completed</h1><p>Both reviews have been submitted. BookAnInstructor will now review the payout.</p><p><a href="${agreementUrl}">View agreement</a></p>`,
+      text: `Reviews completed. View agreement: ${agreementUrl}`,
+    }),
+    sendBookAnInstructorEmail({
+      to: instructorData?.email,
+      subject,
+      html: `<h1>Reviews completed</h1><p>Both reviews have been submitted. BookAnInstructor will now review the payout.</p><p><a href="${agreementUrl}">View agreement</a></p>`,
+      text: `Reviews completed. View agreement: ${agreementUrl}`,
+    }),
+  ]);
+}
 
 async function getSignedInUser(request: Request) {
   if (!supabaseUrl || !supabaseAnonKey) return null;
@@ -84,7 +115,7 @@ export async function POST(request: Request) {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
   const { data, error } = await supabase
     .from("booking_agreements")
-    .select("id,request_id,client_user_id,instructor_id,instructor_user_id,client_name,instructor_name,class_completed_at,client_review_submitted_at,instructor_review_submitted_at")
+    .select("id,request_id,client_user_id,instructor_id,instructor_user_id,client_name,instructor_name,job_title,class_completed_at,client_review_submitted_at,instructor_review_submitted_at,request:client_requests(client_email),instructor:instructors(email)")
     .eq("id", agreementId)
     .maybeSingle();
 
@@ -145,6 +176,10 @@ export async function POST(request: Request) {
       })
       .eq("id", agreement.id);
 
+    if (agreement.instructor_review_submitted_at) {
+      await sendReviewsCompletedEmail(agreement);
+    }
+
     return NextResponse.json({ submitted: true });
   }
 
@@ -184,6 +219,10 @@ export async function POST(request: Request) {
     .from("booking_agreements")
     .update({ instructor_review_submitted_at: now, updated_at: now })
     .eq("id", agreement.id);
+
+  if (agreement.client_review_submitted_at) {
+    await sendReviewsCompletedEmail(agreement);
+  }
 
   return NextResponse.json({ submitted: true });
 }

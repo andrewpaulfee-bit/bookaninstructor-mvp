@@ -89,6 +89,32 @@ export default function AdminJobReview() {
     setForm((current) => ({ ...current, [name]: value }));
   }
 
+  async function notifyStatus(status: string) {
+    const event =
+      status === "open"
+        ? "job_approved"
+        : status === "needs_changes"
+          ? "job_needs_changes"
+          : status === "rejected"
+            ? "job_rejected"
+            : "";
+
+    if (!event) return;
+
+    const { data: sessionData } = await supabase.auth.getSession();
+    const token = sessionData.session?.access_token;
+    if (!token) return;
+
+    await fetch("/api/notifications/event", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ event, id: params.id }),
+    }).catch(() => null);
+  }
+
   async function saveJob(nextStatus?: string) {
     setMessage("");
     setIsError(false);
@@ -129,6 +155,7 @@ export default function AdminJobReview() {
     }
 
     setForm((current) => ({ ...current, status }));
+    await notifyStatus(status);
     setMessage(status === "open" ? "Job approved and published." : "Job saved.");
   }
 
