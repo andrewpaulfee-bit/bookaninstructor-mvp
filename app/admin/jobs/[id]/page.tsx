@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import AdminGate from "../../../../components/AdminGate";
 import Nav from "../../../../components/Nav";
@@ -39,6 +39,8 @@ export default function AdminJobReview() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
+  const [savingStatus, setSavingStatus] = useState("");
+  const savingRef = useRef(false);
 
   useEffect(() => {
     async function loadJob() {
@@ -125,13 +127,18 @@ export default function AdminJobReview() {
   }
 
   async function saveJob(nextStatus?: string, reviewNotesOverride?: string) {
+    if (savingRef.current) return;
+    savingRef.current = true;
     setMessage("");
     setIsError(false);
 
     const status = nextStatus || form.status;
+    setSavingStatus(status);
     const reviewNotes = reviewNotesOverride ?? form.review_notes;
 
     if (status === "needs_changes" && !reviewNotes.trim()) {
+      savingRef.current = false;
+      setSavingStatus("");
       setIsError(true);
       setMessage("Add review notes before sending this back to the client.");
       return;
@@ -166,13 +173,18 @@ export default function AdminJobReview() {
       .eq("id", params.id);
 
     if (error) {
+      savingRef.current = false;
+      setSavingStatus("");
       setIsError(true);
       setMessage(error.message);
       return;
     }
 
     setForm((current) => ({ ...current, status, review_notes: reviewNotes }));
-    const notificationMessage = await notifyStatus(status);
+    const shouldNotify = form.status !== status;
+    const notificationMessage = shouldNotify
+      ? await notifyStatus(status)
+      : " Email notification not sent because the status was already unchanged.";
     setMessage(
       (status === "open"
         ? "Job approved and published."
@@ -180,6 +192,8 @@ export default function AdminJobReview() {
           ? "Change request sent to the client."
           : "Job saved.") + notificationMessage
     );
+    savingRef.current = false;
+    setSavingStatus("");
   }
 
   async function requestChanges() {
@@ -220,14 +234,14 @@ export default function AdminJobReview() {
       ) : (
         <form className="formPanel wideForm" onSubmit={onSubmit}>
           <div className="buttonRow">
-            <button className="btn" type="button" onClick={() => saveJob("open")}>
-              Approve / publish
+            <button className="btn" disabled={Boolean(savingStatus)} type="button" onClick={() => saveJob("open")}>
+              {savingStatus === "open" ? "Approving..." : "Approve / publish"}
             </button>
-            <button className="secondaryButton" type="button" onClick={requestChanges}>
-              Needs changes
+            <button className="secondaryButton" disabled={Boolean(savingStatus)} type="button" onClick={requestChanges}>
+              {savingStatus === "needs_changes" ? "Sending..." : "Needs changes"}
             </button>
-            <button className="secondaryButton" type="button" onClick={() => saveJob("rejected")}>
-              Reject
+            <button className="secondaryButton" disabled={Boolean(savingStatus)} type="button" onClick={() => saveJob("rejected")}>
+              {savingStatus === "rejected" ? "Rejecting..." : "Reject"}
             </button>
           </div>
           {message && <p className={isError ? "formMessage error" : "formMessage"}>{message}</p>}

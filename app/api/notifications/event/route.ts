@@ -77,6 +77,7 @@ export async function POST(request: Request) {
 
     const jobUrl = `${appBaseUrl}/my-jobs`;
     const title = data.title || data.style || "your instructor request";
+    const showReviewNotes = event !== "job_approved" && data.review_notes;
     const statusText =
       event === "job_approved"
         ? "approved and published"
@@ -90,13 +91,13 @@ export async function POST(request: Request) {
       html: `
         <h1>Your request has been ${statusText}</h1>
         <p><strong>${title}</strong></p>
-        ${data.review_notes ? `<p><strong>Review notes:</strong> ${data.review_notes}</p>` : ""}
+        ${showReviewNotes ? `<p><strong>Review notes:</strong> ${data.review_notes}</p>` : ""}
         ${actionButton("View your job", jobUrl)}
       `,
       text: [
         `Your request has been ${statusText}.`,
         title,
-        data.review_notes ? `Review notes: ${data.review_notes}` : "",
+        showReviewNotes ? `Review notes: ${data.review_notes}` : "",
         `View your job: ${jobUrl}`,
       ].filter(Boolean).join("\n\n"),
     });
