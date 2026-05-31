@@ -425,6 +425,16 @@ export default function MyJobs() {
                 {request.offers?.length ? (
                   request.offers.map((offer) => (
                     <article className="offerCard" key={offer.id}>
+                      {offer.status === "accepted" && !agreementForOffer(offer.id) && (
+                        <p className="formMessage">
+                          Instructor selected. Please click Review agreement next, check the booking details, then send it to the instructor.
+                        </p>
+                      )}
+                      {offer.status === "accepted" && agreementForOffer(offer.id)?.status === "draft" && (
+                        <p className="formMessage">
+                          Agreement ready. Please click View agreement, check the booking details, then send it to the instructor.
+                        </p>
+                      )}
                       <div className="offerHeader">
                         {offer.instructor?.headshot_url ? (
                           <img alt={firstNameOnly(offer.instructor.name)} src={offer.instructor.headshot_url} />
