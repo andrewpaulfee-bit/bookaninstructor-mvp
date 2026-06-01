@@ -54,7 +54,7 @@ export async function POST(request: Request) {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
   const { data: agreement, error: agreementError } = await supabase
     .from("booking_agreements")
-    .select("id,payment_status,class_completed_at,payout_status,instructor_payout")
+    .select("id,payment_status,class_completed_at,client_review_submitted_at,instructor_review_submitted_at,payout_status,instructor_payout")
     .eq("id", agreementId)
     .maybeSingle();
 
@@ -90,7 +90,15 @@ export async function POST(request: Request) {
           updated_at: now,
         };
 
-  if (action === "approve" && agreement.payout_status !== "ready_for_review") {
+  const reviewsComplete =
+    Boolean(agreement.client_review_submitted_at) &&
+    Boolean(agreement.instructor_review_submitted_at);
+
+  if (
+    action === "approve" &&
+    agreement.payout_status !== "ready_for_review" &&
+    !reviewsComplete
+  ) {
     return NextResponse.json(
       { error: "This payout is not waiting for approval." },
       { status: 400 }

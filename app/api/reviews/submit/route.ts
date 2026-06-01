@@ -166,18 +166,26 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: insertError.message }, { status: 500 });
     }
 
-    await supabase
-      .from("booking_agreements")
-      .update({
-        client_review_submitted_at: now,
-        payout_status: "ready_for_review",
-        payout_ready_at: now,
-        updated_at: now,
-      })
-      .eq("id", agreement.id);
-
     if (agreement.instructor_review_submitted_at) {
+      await supabase
+        .from("booking_agreements")
+        .update({
+          client_review_submitted_at: now,
+          payout_status: "ready_for_review",
+          payout_ready_at: now,
+          updated_at: now,
+        })
+        .eq("id", agreement.id);
       await sendReviewsCompletedEmail(agreement);
+    } else {
+      await supabase
+        .from("booking_agreements")
+        .update({
+          client_review_submitted_at: now,
+          payout_status: "awaiting_instructor_review",
+          updated_at: now,
+        })
+        .eq("id", agreement.id);
     }
 
     return NextResponse.json({ submitted: true });
@@ -215,13 +223,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: insertError.message }, { status: 500 });
   }
 
-  await supabase
-    .from("booking_agreements")
-    .update({ instructor_review_submitted_at: now, updated_at: now })
-    .eq("id", agreement.id);
-
   if (agreement.client_review_submitted_at) {
+    await supabase
+      .from("booking_agreements")
+      .update({
+        instructor_review_submitted_at: now,
+        payout_status: "ready_for_review",
+        payout_ready_at: now,
+        updated_at: now,
+      })
+      .eq("id", agreement.id);
     await sendReviewsCompletedEmail(agreement);
+  } else {
+    await supabase
+      .from("booking_agreements")
+      .update({
+        instructor_review_submitted_at: now,
+        payout_status: "awaiting_client_review",
+        updated_at: now,
+      })
+      .eq("id", agreement.id);
   }
 
   return NextResponse.json({ submitted: true });

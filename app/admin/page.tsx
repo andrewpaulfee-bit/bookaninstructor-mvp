@@ -175,7 +175,11 @@ export default function Admin() {
         (agreement) =>
           agreement.payment_status === "paid" &&
           agreement.class_completed_at &&
-          ["ready_for_review", "approved"].includes(agreement.payout_status || "")
+          agreement.client_review_submitted_at &&
+          agreement.instructor_review_submitted_at &&
+          ["ready_for_review", "approved", "awaiting_client_review", "awaiting_instructor_review"].includes(
+            agreement.payout_status || ""
+          )
       ),
     [agreements]
   );
@@ -185,7 +189,10 @@ export default function Admin() {
         (agreement) =>
           agreement.payment_status === "paid" &&
           agreement.class_completed_at &&
-          agreement.payout_status === "awaiting_client_review"
+          (!agreement.client_review_submitted_at || !agreement.instructor_review_submitted_at) &&
+          ["awaiting_client_review", "awaiting_instructor_review", "not_ready"].includes(
+            agreement.payout_status || "not_ready"
+          )
       ),
     [agreements]
   );

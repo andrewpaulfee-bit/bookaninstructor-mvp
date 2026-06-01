@@ -12,6 +12,7 @@ type Agreement = {
   payment_status: string | null;
   class_completed_at: string | null;
   client_review_submitted_at: string | null;
+  instructor_review_submitted_at: string | null;
   payout_status: string | null;
   instructor_id: string;
   instructor_payout: number | null;
@@ -67,7 +68,7 @@ export async function POST(request: Request) {
   const { data, error } = await supabase
     .from("booking_agreements")
     .select(
-      "id,contract_number,payment_status,class_completed_at,client_review_submitted_at,payout_status,instructor_id,instructor_payout,stripe_transfer_id,instructor:instructors(stripe_connect_account_id,stripe_connect_payouts_enabled)"
+      "id,contract_number,payment_status,class_completed_at,client_review_submitted_at,instructor_review_submitted_at,payout_status,instructor_id,instructor_payout,stripe_transfer_id,instructor:instructors(stripe_connect_account_id,stripe_connect_payouts_enabled)"
     )
     .eq("id", agreementId)
     .maybeSingle();
@@ -105,7 +106,10 @@ export async function POST(request: Request) {
     agreement.payment_status !== "paid" ||
     !agreement.class_completed_at ||
     !agreement.client_review_submitted_at ||
-    agreement.payout_status !== "ready_for_review"
+    !agreement.instructor_review_submitted_at ||
+    !["ready_for_review", "awaiting_client_review", "awaiting_instructor_review"].includes(
+      agreement.payout_status || ""
+    )
   ) {
     return NextResponse.json(
       { error: "This booking is not ready for Stripe payout release." },
