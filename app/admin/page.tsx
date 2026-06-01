@@ -376,6 +376,9 @@ export default function Admin() {
             Work from left to right: approve new submissions, monitor live bookings,
             then finalise payouts once reviews are complete.
           </p>
+          <a className="secondaryButton adminGuideLink" href="/admin/checklist">
+            Open admin checklist
+          </a>
         </div>
         <ol>
           <li>

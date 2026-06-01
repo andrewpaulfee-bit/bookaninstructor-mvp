@@ -54,6 +54,7 @@ export default function Nav() {
           {session && <Link href="/messages">Messages</Link>}
           {session && <Link href="/my-agreements">Agreements</Link>}
           {session && role === "admin" && <Link href="/admin">Admin</Link>}
+          {session && role === "admin" && <Link href="/admin/checklist">Admin Checklist</Link>}
           {!session && <Link href="/login">Sign in</Link>}
         </div>
       </details>
