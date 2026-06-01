@@ -43,7 +43,7 @@ a {
 }
 
 .nav a,
-.nav summary,
+.navMenuButton,
 .navButton {
   min-height: 38px;
   display: inline-flex;
@@ -78,20 +78,24 @@ a {
   position: relative;
 }
 
-.navGroup summary {
-  list-style: none;
-  cursor: pointer;
+.navMenuButton {
   gap: 6px;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
 }
 
-.navGroup summary::-webkit-details-marker {
-  display: none;
-}
-
-.navGroup summary::after {
+.navMenuButton::after {
   content: "⌄";
   color: #667181;
   font-size: 14px;
+}
+
+.navMenuButton[aria-expanded="true"]::after {
+  transform: rotate(180deg);
 }
 
 .navDropdown {
@@ -1971,7 +1975,7 @@ a.adminStatCard:focus {
   }
 
   .nav a,
-  .nav summary,
+  .navMenuButton,
   .navButton {
     min-height: 34px;
   }
