@@ -177,9 +177,7 @@ export default function Admin() {
           agreement.class_completed_at &&
           agreement.client_review_submitted_at &&
           agreement.instructor_review_submitted_at &&
-          ["ready_for_review", "approved", "awaiting_client_review", "awaiting_instructor_review"].includes(
-            agreement.payout_status || ""
-          )
+          agreement.payout_status !== "paid"
       ),
     [agreements]
   );
@@ -601,7 +599,9 @@ export default function Admin() {
                   {agreement.instructor_name || "Instructor"}
                 </p>
               </div>
-              <span className="statusBadge">{agreement.payout_status}</span>
+              <span className="statusBadge">
+                {agreement.payout_status === "approved" ? "approved" : "ready_for_review"}
+              </span>
               <dl>
                 <div>
                   <dt>Contract</dt>
@@ -681,7 +681,7 @@ export default function Admin() {
                 <a className="secondaryButton" href={`/agreements/${agreement.id}`}>
                   View agreement
                 </a>
-                {agreement.payout_status === "ready_for_review" && (
+                {agreement.payout_status !== "approved" && (
                   <button
                     className="btn"
                     type="button"
@@ -691,7 +691,7 @@ export default function Admin() {
                     {savingPayoutId === agreement.id ? "Releasing..." : "Release via Stripe"}
                   </button>
                 )}
-                {agreement.payout_status === "ready_for_review" && (
+                {agreement.payout_status !== "approved" && (
                   <button
                     className="secondaryButton"
                     type="button"
