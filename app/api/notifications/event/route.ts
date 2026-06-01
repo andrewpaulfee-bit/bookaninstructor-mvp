@@ -87,21 +87,33 @@ export async function POST(request: Request) {
 
     const result = await sendBookAnInstructorEmail({
       to: data.client_email,
-      subject: `Update on your BookAnInstructor request`,
+      subject:
+        event === "job_approved"
+          ? `Your instructor request is now live`
+          : event === "job_needs_changes"
+            ? `A quick update is needed for your instructor request`
+            : `Update on your instructor request`,
       html: `
-        <h1>Your request update</h1>
+        <h1>Your instructor request update</h1>
         <p>Hi ${data.first_name || data.client_name || "there"},</p>
-        <p>Thanks for submitting your request through BookAnInstructor.</p>
-        <p><strong>${title}</strong></p>
-        <p>Status: <strong>${statusText}</strong></p>
-        ${showReviewNotes ? `<p><strong>Review notes:</strong> ${data.review_notes}</p>` : ""}
-        <p>You can view your request and make any updates from your account.</p>
+        ${
+          event === "job_approved"
+            ? `<p>Good news. Your request has been reviewed and published for approved instructors to view.</p>`
+            : event === "job_needs_changes"
+              ? `<p>Thanks for sending through your request. Before we publish it, we need one small update so instructors have the right information.</p>`
+              : `<p>Thanks for sending through your request. We have reviewed it and it has not been approved in its current form.</p>`
+        }
+        <p><strong>Request:</strong> ${title}</p>
+        <p><strong>Status:</strong> ${statusText}</p>
+        ${showReviewNotes ? `<p><strong>What to update:</strong> ${data.review_notes}</p>` : ""}
+        <p>You can open your request from your account to review the details or make updates.</p>
         ${actionButton(event === "job_needs_changes" ? "Update your request" : "View your request", jobUrl)}
       `,
       text: [
-        `Your request status: ${statusText}.`,
-        title,
-        showReviewNotes ? `Review notes: ${data.review_notes}` : "",
+        `Hi ${data.first_name || data.client_name || "there"},`,
+        `Request: ${title}`,
+        `Status: ${statusText}`,
+        showReviewNotes ? `What to update: ${data.review_notes}` : "",
         `View your request: ${jobUrl}`,
       ].filter(Boolean).join("\n\n"),
     });
@@ -123,19 +135,31 @@ export async function POST(request: Request) {
 
     const result = await sendBookAnInstructorEmail({
       to: data.email,
-      subject: `Update on your BookAnInstructor profile`,
+      subject:
+        event === "instructor_approved"
+          ? `Your BookAnInstructor profile is approved`
+          : event === "instructor_needs_changes"
+            ? `A quick update is needed for your instructor profile`
+            : `Update on your BookAnInstructor profile`,
       html: `
         <h1>Your instructor profile update</h1>
         <p>Hi ${data.first_name || data.name || "there"},</p>
-        <p>Thanks for setting up your BookAnInstructor profile.</p>
-        <p>Status: <strong>${statusText}</strong></p>
-        ${data.review_notes ? `<p><strong>Review notes:</strong> ${data.review_notes}</p>` : ""}
-        <p>You can review your profile details from your account.</p>
+        ${
+          event === "instructor_approved"
+            ? `<p>Great news. Your profile has been approved and can now appear in BookAnInstructor search results.</p>`
+            : event === "instructor_needs_changes"
+              ? `<p>Thanks for setting up your profile. We need one update before it can be approved.</p>`
+              : `<p>Thanks for submitting your profile. We have reviewed it and it has not been approved in its current form.</p>`
+        }
+        <p><strong>Status:</strong> ${statusText}</p>
+        ${data.review_notes ? `<p><strong>What to update:</strong> ${data.review_notes}</p>` : ""}
+        <p>You can open your profile setup from your account and update the details there.</p>
         ${actionButton("Open profile setup", profileUrl)}
       `,
       text: [
+        `Hi ${data.first_name || data.name || "there"},`,
         `Your instructor profile status: ${statusText}.`,
-        data.review_notes ? `Review notes: ${data.review_notes}` : "",
+        data.review_notes ? `What to update: ${data.review_notes}` : "",
         `Open profile setup: ${profileUrl}`,
       ].filter(Boolean).join("\n\n"),
     });
@@ -163,7 +187,7 @@ export async function POST(request: Request) {
       html: `
         <h1>You have a new instructor reply</h1>
         <p>Hi ${requestData?.client_name || "there"},</p>
-        <p>An instructor has replied to your request. Review their offer, message them if you need to clarify anything, then select the instructor you would like to book.</p>
+        <p>An instructor has replied to your request. You can review their offer, message them if you would like to clarify anything, and select the instructor when you are ready.</p>
         <p><strong>Instructor:</strong> ${instructor?.name || "Instructor"}</p>
         <p><strong>Price:</strong> ${data.price ? `$${data.price}` : "Not supplied"}</p>
         <p><strong>Availability:</strong> ${data.availability || "Not supplied"}</p>
@@ -171,7 +195,8 @@ export async function POST(request: Request) {
         ${actionButton("Review reply", `${appBaseUrl}/my-jobs`)}
       `,
       text: [
-        "You have a new instructor reply. Review their offer, message them if needed, then select the instructor you would like to book.",
+        `Hi ${requestData?.client_name || "there"},`,
+        "You have a new instructor reply. Review their offer, message them if needed, then select the instructor when you are ready.",
         `Instructor: ${instructor?.name || "Instructor"}`,
         `Price: ${data.price ? `$${data.price}` : "Not supplied"}`,
         `Availability: ${data.availability || "Not supplied"}`,
@@ -202,14 +227,14 @@ export async function POST(request: Request) {
       subject: `You were selected for ${requestData?.title || "a BookAnInstructor request"}`,
       html: `
         <h1>You have been selected</h1>
-        <p>Great news. ${requestData?.client_name || "The client"} selected you for <strong>${requestData?.title || "their request"}</strong>.</p>
-        <p>The client will now review the booking agreement and send it to you through BookAnInstructor. Please wait for the agreement before treating the booking as confirmed.</p>
+        <p>Great news. ${requestData?.client_name || "The client"} has selected you for <strong>${requestData?.title || "their request"}</strong>.</p>
+        <p>The next step is the booking agreement. Please wait until the agreement has been sent and accepted before treating the booking as confirmed.</p>
         ${actionButton("Open BookAnInstructor", `${appBaseUrl}/my-agreements`)}
       `,
       text: [
         "You have been selected.",
         `${requestData?.client_name || "The client"} selected you for ${requestData?.title || "their request"}.`,
-        "The client will now review and send the booking agreement through BookAnInstructor.",
+        "The next step is the booking agreement. Please wait until the agreement has been sent and accepted before treating the booking as confirmed.",
         `Open BookAnInstructor: ${appBaseUrl}/my-agreements`,
       ].join("\n\n"),
     });
@@ -237,7 +262,7 @@ export async function POST(request: Request) {
       html: `
         <h1>Agreement ready for review</h1>
         <p>The client has sent the booking agreement for your review.</p>
-        <p>Please check the details carefully. If everything looks correct, accept the agreement in BookAnInstructor. The client will then be asked to complete payment.</p>
+        <p>Please check the booking details carefully. If everything looks correct, accept the agreement in BookAnInstructor. The client will then be asked to complete payment.</p>
         <p><strong>Contract:</strong> ${data.contract_number || data.id.slice(0, 8)}</p>
         ${actionButton("Review and accept agreement", agreementUrl)}
       `,

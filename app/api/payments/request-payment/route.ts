@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { actionButton, appBaseUrl, sendBookAnInstructorEmail } from "../../../../lib/email";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const resendApiKey = process.env.RESEND_API_KEY;
-const resendFromEmail =
-  process.env.RESEND_FROM_EMAIL || "BookAnInstructor <notifications@bookaninstructor.com>";
-const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3010";
 
 type Agreement = {
   id: string;
@@ -133,51 +130,28 @@ export async function POST(request: Request) {
     return NextResponse.json({ skipped: true, reason: "No client email found." });
   }
 
-  if (!resendApiKey) {
-    console.log("Payment request email skipped. Add RESEND_API_KEY to enable:", {
-      recipient,
-      agreementId,
-      payUrl,
-    });
-    return NextResponse.json({
-      skipped: true,
-      reason: "RESEND_API_KEY is not configured.",
-      payUrl,
-    });
-  }
-
   const subject = `Payment request for ${agreement.job_title || agreement.request?.title || "your booking"}`;
-  const emailResult = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${resendApiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: resendFromEmail,
-      to: recipient,
-      subject,
-      html: `
-        <h1>Your instructor agreement has been accepted</h1>
-        <p>${agreement.instructor_name || "The instructor"} has accepted the booking agreement.</p>
-        <p>The next step is to complete payment through BookAnInstructor. Once payment is received, the booking will be confirmed for both you and the instructor.</p>
-        <p><strong>Contract:</strong> ${agreement.contract_number || agreement.id.slice(0, 8)}</p>
-        <p><strong>Total:</strong> ${money(agreement.total_fee)}</p>
-        <p><a href="${payUrl}" style="display:inline-block;background:#4374d1;color:#fff;padding:12px 18px;border-radius:6px;text-decoration:none;">Pay booking fee</a></p>
-      `,
-      text: [
-        "Your instructor agreement has been accepted.",
-        "Please complete payment through BookAnInstructor to confirm the booking.",
-        "",
-        `Contract: ${agreement.contract_number || agreement.id.slice(0, 8)}`,
-        `Total: ${money(agreement.total_fee)}`,
-        "",
-        `Pay booking fee: ${payUrl}`,
-      ].join("\n"),
-    }),
+  const emailResult = await sendBookAnInstructorEmail({
+    to: recipient,
+    subject,
+    html: `
+      <h1>Your agreement has been accepted</h1>
+      <p>${agreement.instructor_name || "The instructor"} has accepted the booking agreement.</p>
+      <p>The next step is to complete payment through BookAnInstructor. Once payment is received, the booking will be confirmed for both you and the instructor.</p>
+      <p><strong>Contract:</strong> ${agreement.contract_number || agreement.id.slice(0, 8)}</p>
+      <p><strong>Total:</strong> ${money(agreement.total_fee)}</p>
+      ${actionButton("Pay booking fee", payUrl)}
+    `,
+    text: [
+      "Your agreement has been accepted.",
+      "Please complete payment through BookAnInstructor to confirm the booking.",
+      `Contract: ${agreement.contract_number || agreement.id.slice(0, 8)}`,
+      `Total: ${money(agreement.total_fee)}`,
+      `Pay booking fee: ${payUrl}`,
+    ].join("\n\n"),
   });
 
-  if (!emailResult.ok) {
+  if ("error" in emailResult) {
     return NextResponse.json(
       { error: "Payment request was created, but the email could not be sent." },
       { status: 502 }

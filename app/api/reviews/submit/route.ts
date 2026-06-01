@@ -39,14 +39,32 @@ async function sendReviewsCompletedEmail(agreement: Agreement) {
     sendBookAnInstructorEmail({
       to: requestData?.client_email,
       subject,
-      html: `<h1>Reviews completed</h1><p>Thanks, both post-class reviews have now been submitted.</p><p>BookAnInstructor will review the booking and finalise the instructor payout process.</p>${actionButton("View agreement", agreementUrl)}`,
-      text: `Reviews completed. BookAnInstructor will now review the booking and finalise the instructor payout process. View agreement: ${agreementUrl}`,
+      html: `
+        <h1>Reviews completed</h1>
+        <p>Thanks, both post-class reviews have now been submitted.</p>
+        <p>BookAnInstructor will now complete the final admin review and finalise the instructor payout process.</p>
+        ${actionButton("View agreement", agreementUrl)}
+      `,
+      text: [
+        "Reviews completed.",
+        "BookAnInstructor will now complete the final admin review and finalise the instructor payout process.",
+        `View agreement: ${agreementUrl}`,
+      ].join("\n\n"),
     }),
     sendBookAnInstructorEmail({
       to: instructorData?.email,
       subject,
-      html: `<h1>Reviews completed</h1><p>Thanks, both post-class reviews have now been submitted.</p><p>BookAnInstructor will review the booking and finalise the payout process.</p>${actionButton("View agreement", agreementUrl)}`,
-      text: `Reviews completed. BookAnInstructor will now review the booking and finalise the payout process. View agreement: ${agreementUrl}`,
+      html: `
+        <h1>Reviews completed</h1>
+        <p>Thanks, both post-class reviews have now been submitted.</p>
+        <p>The booking is now ready for final admin review. Once the payout has been processed, you will receive a payout confirmation email.</p>
+        ${actionButton("View agreement", agreementUrl)}
+      `,
+      text: [
+        "Reviews completed.",
+        "The booking is now ready for final admin review. Once the payout has been processed, you will receive a payout confirmation email.",
+        `View agreement: ${agreementUrl}`,
+      ].join("\n\n"),
     }),
   ]);
 }

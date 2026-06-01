@@ -4,6 +4,57 @@ const resendApiKey = process.env.RESEND_API_KEY;
 const resendFromEmail =
   process.env.RESEND_FROM_EMAIL || "BookAnInstructor <notifications@bookaninstructor.com>";
 
+export function escapeHtml(value: string | number | null | undefined) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function emailTemplate(content: string) {
+  return `
+    <div style="margin:0;padding:0;background:#eef4f9;font-family:Arial,Helvetica,sans-serif;color:#202737;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#eef4f9;padding:28px 12px;">
+        <tr>
+          <td align="center">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;background:#ffffff;border:1px solid #dce4ed;border-radius:10px;overflow:hidden;">
+              <tr>
+                <td style="padding:24px 28px 12px;">
+                  <img src="${appBaseUrl}/logo.png" alt="BookAnInstructor" width="90" style="display:block;width:90px;height:auto;margin:0 0 18px;" />
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:0 28px 22px;font-size:16px;line-height:1.6;color:#202737;">
+                  ${content}
+                  <hr style="border:0;border-top:1px solid #e3ebf4;margin:28px 0 18px;" />
+                  <p style="margin:0 0 4px;color:#202737;font-weight:700;">Warm regards,</p>
+                  <p style="margin:0;color:#4f5b6d;">The BookAnInstructor Team</p>
+                  <p style="margin:14px 0 0;color:#667181;font-size:13px;line-height:1.5;">
+                    Please keep booking communication inside BookAnInstructor so agreements, payments, reviews, and support stay clear for everyone.
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+  `;
+}
+
+function emailText(content: string) {
+  return [
+    content,
+    "",
+    "Warm regards,",
+    "The BookAnInstructor Team",
+    "",
+    "Please keep booking communication inside BookAnInstructor so agreements, payments, reviews, and support stay clear for everyone.",
+  ].join("\n");
+}
+
 export async function sendBookAnInstructorEmail({
   to,
   subject,
@@ -34,8 +85,8 @@ export async function sendBookAnInstructorEmail({
       from: resendFromEmail,
       to,
       subject,
-      html,
-      text,
+      html: emailTemplate(html),
+      text: emailText(text),
     }),
   });
 
@@ -56,5 +107,5 @@ export async function sendBookAnInstructorEmail({
 }
 
 export function actionButton(label: string, url: string) {
-  return `<p><a href="${url}" style="display:inline-block;background:#4374d1;color:#fff;padding:12px 18px;border-radius:6px;text-decoration:none;">${label}</a></p>`;
+  return `<p style="margin:22px 0;"><a href="${url}" style="display:inline-block;background:#4374d1;color:#fff;padding:12px 18px;border-radius:6px;text-decoration:none;font-weight:700;">${label}</a></p>`;
 }

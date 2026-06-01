@@ -1,13 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { actionButton, appBaseUrl, sendBookAnInstructorEmail } from "../../../../lib/email";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const resendApiKey = process.env.RESEND_API_KEY;
-const resendFromEmail =
-  process.env.RESEND_FROM_EMAIL || "BookAnInstructor <notifications@bookaninstructor.com>";
-const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3010";
 
 type Agreement = {
   id: string;
@@ -40,28 +37,6 @@ async function getSignedInUser(request: Request) {
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
   const { data } = await supabase.auth.getUser(token);
   return data.user || null;
-}
-
-async function sendEmail(to: string, subject: string, html: string, text: string) {
-  if (!resendApiKey) {
-    console.log("Review request email skipped. Add RESEND_API_KEY to enable:", { to, subject });
-    return;
-  }
-
-  await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${resendApiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: resendFromEmail,
-      to,
-      subject,
-      html,
-      text,
-    }),
-  });
 }
 
 export async function POST(request: Request) {
@@ -150,46 +125,44 @@ export async function POST(request: Request) {
   const title = agreement.job_title || agreement.request?.title || "your booking";
 
   if (agreement.request?.client_email) {
-    await sendEmail(
-      agreement.request.client_email,
-      `Review ${agreement.instructor_name || "your instructor"} for ${title}`,
-      `
+    await sendBookAnInstructorEmail({
+      to: agreement.request.client_email,
+      subject: `Review ${agreement.instructor_name || "your instructor"} for ${title}`,
+      html: `
         <h1>How did your class go?</h1>
         <p>${agreement.instructor_name || "Your instructor"} has marked the booking as complete.</p>
         <p>Please take a moment to review your instructor. Your review helps us maintain quality and helps future clients choose with confidence.</p>
         <p><strong>Contract:</strong> ${contract}</p>
-        <p><a href="${reviewInstructorUrl}" style="display:inline-block;background:#4374d1;color:#fff;padding:12px 18px;border-radius:6px;text-decoration:none;">Review instructor</a></p>
+        ${actionButton("Review instructor", reviewInstructorUrl)}
       `,
-      [
+      text: [
         "How did your class go?",
         `${agreement.instructor_name || "Your instructor"} has marked the booking as complete.`,
         "Please review your instructor when you have a moment.",
         `Contract: ${contract}`,
-        "",
         `Review instructor: ${reviewInstructorUrl}`,
-      ].join("\n")
-    );
+      ].join("\n\n"),
+    });
   }
 
   if (agreement.instructor?.email) {
-    await sendEmail(
-      agreement.instructor.email,
-      `Review the client for ${title}`,
-      `
+    await sendBookAnInstructorEmail({
+      to: agreement.instructor.email,
+      subject: `Review the client for ${title}`,
+      html: `
         <h1>Please review the client</h1>
         <p>The booking has been marked complete. Please review your experience with ${agreement.client_name || agreement.request?.client_name || "the client"}.</p>
-        <p>This is an internal review for BookAnInstructor and helps us keep the platform safe and professional for instructors.</p>
+        <p>This review is kept internally. It helps BookAnInstructor monitor booking quality and keep the platform professional for instructors.</p>
         <p><strong>Contract:</strong> ${contract}</p>
-        <p><a href="${reviewClientUrl}" style="display:inline-block;background:#4374d1;color:#fff;padding:12px 18px;border-radius:6px;text-decoration:none;">Review client</a></p>
+        ${actionButton("Review client", reviewClientUrl)}
       `,
-      [
+      text: [
         "Please review the client.",
-        "This internal review helps BookAnInstructor maintain platform quality.",
+        "This internal review helps BookAnInstructor monitor booking quality and keep the platform professional for instructors.",
         `Contract: ${contract}`,
-        "",
         `Review client: ${reviewClientUrl}`,
-      ].join("\n")
-    );
+      ].join("\n\n"),
+    });
   }
 
   const { data: conversation } = await supabase

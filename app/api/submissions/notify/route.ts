@@ -1,14 +1,11 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { actionButton, appBaseUrl, escapeHtml, sendBookAnInstructorEmail } from "../../../../lib/email";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const resendApiKey = process.env.RESEND_API_KEY;
-const resendFromEmail =
-  process.env.RESEND_FROM_EMAIL || "BookAnInstructor <notifications@bookaninstructor.com>";
 const submissionsEmail = process.env.SUBMISSIONS_EMAIL || "submissions@bookaninstructor.com";
-const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3010";
 
 type SubmissionType = "job" | "instructor";
 
@@ -90,48 +87,26 @@ export async function POST(request: Request) {
           `Bio: ${rowValue(data.bio)}`,
         ];
 
-  if (!resendApiKey) {
-    console.log("Submission email skipped. Add RESEND_API_KEY to enable:", {
-      type,
-      id,
-      to: submissionsEmail,
-      reviewUrl: url,
-    });
-    return NextResponse.json({ skipped: true, reason: "RESEND_API_KEY is not configured." });
-  }
-
-  const emailResult = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${resendApiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: resendFromEmail,
-      to: submissionsEmail,
+  const emailResult = await sendBookAnInstructorEmail({
+    to: submissionsEmail,
+    subject,
+    html: `
+      <h1>${escapeHtml(subject)}</h1>
+      <p>A new ${type} submission is waiting for human review.</p>
+      ${actionButton("Review submission", url)}
+      <h2>Submission details</h2>
+      <ul>${lines.map((line) => `<li>${escapeHtml(line)}</li>`).join("")}</ul>
+    `,
+    text: [
       subject,
-      html: `
-        <h1>${subject}</h1>
-        <p>A new ${type} submission is waiting for human review.</p>
-        <p><a href="${url}" style="display:inline-block;background:#4374d1;color:#fff;padding:12px 18px;border-radius:6px;text-decoration:none;">Review Submission</a></p>
-        <h2>Submission details</h2>
-        <ul>${lines.map((line) => `<li>${line}</li>`).join("")}</ul>
-      `,
-      text: [
-        subject,
-        "",
-        "A new submission is waiting for human review.",
-        "",
-        ...lines,
-        "",
-        `Review submission: ${url}`,
-      ].join("\n"),
-    }),
+      "A new submission is waiting for human review.",
+      ...lines,
+      `Review submission: ${url}`,
+    ].join("\n\n"),
   });
 
-  if (!emailResult.ok) {
-    const body = await emailResult.text();
-    console.error("Submission notification email failed:", body);
+  if ("error" in emailResult) {
+    console.error("Submission notification email failed:", emailResult.error);
     return NextResponse.json(
       { error: "Could not send submission notification email." },
       { status: 502 }

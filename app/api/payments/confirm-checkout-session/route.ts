@@ -108,14 +108,14 @@ export async function POST(request: Request) {
       html: `
         <h1>Payment received</h1>
         <p>Thanks, your payment has been received and your booking is now confirmed.</p>
-        <p>You can view the agreement at any time from your BookAnInstructor account.</p>
+        <p>The instructor has also been notified. You can view the agreement at any time from your BookAnInstructor account.</p>
         <p><strong>Contract:</strong> ${contract}</p>
         <p><strong>Total fee:</strong> ${agreement.total_fee ? `$${agreement.total_fee}` : "Paid"}</p>
         ${actionButton("View agreement", agreementUrl)}
       `,
       text: [
         "Payment received. Your booking is confirmed.",
-        "You can view the agreement from your BookAnInstructor account.",
+        "The instructor has also been notified. You can view the agreement from your BookAnInstructor account.",
         `Contract: ${contract}`,
         `View agreement: ${agreementUrl}`,
       ].join("\n\n"),
@@ -126,13 +126,13 @@ export async function POST(request: Request) {
       html: `
         <h1>Booking confirmed</h1>
         <p>The client has completed payment, so this booking is now confirmed.</p>
-        <p>Please keep all booking communication inside BookAnInstructor unless the platform provides further instructions.</p>
+        <p>You can view the agreement from your account. Please keep booking communication inside BookAnInstructor so the details stay clear for everyone.</p>
         <p><strong>Contract:</strong> ${contract}</p>
         ${actionButton("View agreement", agreementUrl)}
       `,
       text: [
         "Booking confirmed. The client has completed payment.",
-        "Please keep booking communication inside BookAnInstructor unless the platform provides further instructions.",
+        "You can view the agreement from your account. Please keep booking communication inside BookAnInstructor so the details stay clear for everyone.",
         `Contract: ${contract}`,
         `View agreement: ${agreementUrl}`,
       ].join("\n\n"),
