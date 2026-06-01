@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import Footer from "../components/Footer";
 import { serviceAreaOptions, styleOptions } from "../lib/instructorOptions";
+import { organizationJsonLd, websiteJsonLd } from "../lib/seo";
 
 export default function Home() {
   const [style, setStyle] = useState("");
@@ -42,6 +43,12 @@ export default function Home() {
 
   return (
     <main className="home">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([organizationJsonLd, websiteJsonLd]),
+        }}
+      />
       <nav className="nav">
         <img src="/logo.png" className="logo" />
       </nav>
