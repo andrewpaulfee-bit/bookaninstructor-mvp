@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { actionButton, appBaseUrl, sendBookAnInstructorEmail } from "../../../../lib/email";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -54,7 +55,7 @@ export async function POST(request: Request) {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
   const { data: agreement, error: agreementError } = await supabase
     .from("booking_agreements")
-    .select("id,payment_status,class_completed_at,client_review_submitted_at,instructor_review_submitted_at,payout_status,instructor_payout")
+    .select("id,contract_number,job_title,payment_status,class_completed_at,client_review_submitted_at,instructor_review_submitted_at,payout_status,instructor_payout,instructor_name,instructor:instructors(email)")
     .eq("id", agreementId)
     .maybeSingle();
 
@@ -125,5 +126,45 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: updateError.message }, { status: 500 });
   }
 
-  return NextResponse.json({ agreement: updatedAgreement });
+  let emailResult:
+    | { sent?: boolean; skipped?: boolean; reason?: string; error?: string }
+    | null = null;
+
+  if (action === "mark_paid") {
+    const instructor = Array.isArray(agreement.instructor)
+      ? agreement.instructor[0]
+      : agreement.instructor;
+    const agreementUrl = `${appBaseUrl}/agreements/${agreement.id}`;
+    const subject = `Payout sent for ${agreement.job_title || "your booking"}`;
+    const referenceText = reference?.trim()
+      ? `<p><strong>Reference:</strong> ${reference.trim()}</p>`
+      : "";
+
+    emailResult = await sendBookAnInstructorEmail({
+      to: instructor?.email,
+      subject,
+      html: `
+        <h1>Your payout has been sent</h1>
+        <p>Thanks for completing this BookAnInstructor booking.</p>
+        <p>Your payout for <strong>${agreement.job_title || "your booking"}</strong> has been marked as sent.</p>
+        <p><strong>Contract:</strong> ${agreement.contract_number || agreement.id.slice(0, 8)}</p>
+        <p><strong>Payout amount:</strong> ${agreement.instructor_payout ? `$${agreement.instructor_payout}` : "Confirmed"}</p>
+        ${referenceText}
+        <p>Please allow normal bank or Stripe processing time for the funds to appear.</p>
+        ${actionButton("View agreement", agreementUrl)}
+      `,
+      text: [
+        "Your payout has been sent.",
+        `Booking: ${agreement.job_title || "your booking"}`,
+        `Contract: ${agreement.contract_number || agreement.id.slice(0, 8)}`,
+        `Payout amount: ${agreement.instructor_payout ? `$${agreement.instructor_payout}` : "Confirmed"}`,
+        reference?.trim() ? `Reference: ${reference.trim()}` : "",
+        `View agreement: ${agreementUrl}`,
+      ]
+        .filter(Boolean)
+        .join("\n"),
+    });
+  }
+
+  return NextResponse.json({ agreement: updatedAgreement, email: emailResult });
 }

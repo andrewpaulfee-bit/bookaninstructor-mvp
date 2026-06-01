@@ -284,7 +284,13 @@ export default function Admin() {
       [agreementId]:
         action === "approve"
           ? "Payout approved. You can now mark it as paid once the manual payment is sent."
-          : "Payout marked as paid.",
+          : result.email?.sent
+            ? "Payout marked as paid. Email notification sent to the instructor."
+            : result.email?.skipped
+              ? `Payout marked as paid. Email notification skipped: ${result.email.reason || "No reason supplied."}`
+              : result.email?.error
+                ? `Payout marked as paid. Email notification failed: ${result.email.error}`
+                : "Payout marked as paid.",
     }));
     setSavingPayoutId(null);
   }
