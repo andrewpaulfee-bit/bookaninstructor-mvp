@@ -160,12 +160,14 @@ export async function POST(request: Request) {
       html: `
         <h1>Your instructor agreement has been accepted</h1>
         <p>${agreement.instructor_name || "The instructor"} has accepted the booking agreement.</p>
+        <p>The next step is to complete payment through BookAnInstructor. Once payment is received, the booking will be confirmed for both you and the instructor.</p>
         <p><strong>Contract:</strong> ${agreement.contract_number || agreement.id.slice(0, 8)}</p>
         <p><strong>Total:</strong> ${money(agreement.total_fee)}</p>
         <p><a href="${payUrl}" style="display:inline-block;background:#4374d1;color:#fff;padding:12px 18px;border-radius:6px;text-decoration:none;">Pay booking fee</a></p>
       `,
       text: [
         "Your instructor agreement has been accepted.",
+        "Please complete payment through BookAnInstructor to confirm the booking.",
         "",
         `Contract: ${agreement.contract_number || agreement.id.slice(0, 8)}`,
         `Total: ${money(agreement.total_fee)}`,

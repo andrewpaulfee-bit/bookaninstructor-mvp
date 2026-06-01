@@ -155,13 +155,15 @@ export async function POST(request: Request) {
       `Review ${agreement.instructor_name || "your instructor"} for ${title}`,
       `
         <h1>How did your class go?</h1>
-        <p>${agreement.instructor_name || "Your instructor"} has marked the booking complete.</p>
+        <p>${agreement.instructor_name || "Your instructor"} has marked the booking as complete.</p>
+        <p>Please take a moment to review your instructor. Your review helps us maintain quality and helps future clients choose with confidence.</p>
         <p><strong>Contract:</strong> ${contract}</p>
         <p><a href="${reviewInstructorUrl}" style="display:inline-block;background:#4374d1;color:#fff;padding:12px 18px;border-radius:6px;text-decoration:none;">Review instructor</a></p>
       `,
       [
         "How did your class go?",
-        `${agreement.instructor_name || "Your instructor"} has marked the booking complete.`,
+        `${agreement.instructor_name || "Your instructor"} has marked the booking as complete.`,
+        "Please review your instructor when you have a moment.",
         `Contract: ${contract}`,
         "",
         `Review instructor: ${reviewInstructorUrl}`,
@@ -176,11 +178,13 @@ export async function POST(request: Request) {
       `
         <h1>Please review the client</h1>
         <p>The booking has been marked complete. Please review your experience with ${agreement.client_name || agreement.request?.client_name || "the client"}.</p>
+        <p>This is an internal review for BookAnInstructor and helps us keep the platform safe and professional for instructors.</p>
         <p><strong>Contract:</strong> ${contract}</p>
         <p><a href="${reviewClientUrl}" style="display:inline-block;background:#4374d1;color:#fff;padding:12px 18px;border-radius:6px;text-decoration:none;">Review client</a></p>
       `,
       [
         "Please review the client.",
+        "This internal review helps BookAnInstructor maintain platform quality.",
         `Contract: ${contract}`,
         "",
         `Review client: ${reviewClientUrl}`,

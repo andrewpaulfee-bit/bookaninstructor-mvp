@@ -107,13 +107,15 @@ export async function POST(request: Request) {
       subject: `Payment received for ${title}`,
       html: `
         <h1>Payment received</h1>
-        <p>Your booking is confirmed.</p>
+        <p>Thanks, your payment has been received and your booking is now confirmed.</p>
+        <p>You can view the agreement at any time from your BookAnInstructor account.</p>
         <p><strong>Contract:</strong> ${contract}</p>
         <p><strong>Total fee:</strong> ${agreement.total_fee ? `$${agreement.total_fee}` : "Paid"}</p>
         ${actionButton("View agreement", agreementUrl)}
       `,
       text: [
         "Payment received. Your booking is confirmed.",
+        "You can view the agreement from your BookAnInstructor account.",
         `Contract: ${contract}`,
         `View agreement: ${agreementUrl}`,
       ].join("\n\n"),
@@ -123,12 +125,14 @@ export async function POST(request: Request) {
       subject: `Booking confirmed: ${title}`,
       html: `
         <h1>Booking confirmed</h1>
-        <p>The client has paid and the booking is confirmed.</p>
+        <p>The client has completed payment, so this booking is now confirmed.</p>
+        <p>Please keep all booking communication inside BookAnInstructor unless the platform provides further instructions.</p>
         <p><strong>Contract:</strong> ${contract}</p>
         ${actionButton("View agreement", agreementUrl)}
       `,
       text: [
-        "Booking confirmed. The client has paid.",
+        "Booking confirmed. The client has completed payment.",
+        "Please keep booking communication inside BookAnInstructor unless the platform provides further instructions.",
         `Contract: ${contract}`,
         `View agreement: ${agreementUrl}`,
       ].join("\n\n"),

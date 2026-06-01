@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { appBaseUrl, sendBookAnInstructorEmail } from "../../../../lib/email";
+import { actionButton, appBaseUrl, sendBookAnInstructorEmail } from "../../../../lib/email";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -39,14 +39,14 @@ async function sendReviewsCompletedEmail(agreement: Agreement) {
     sendBookAnInstructorEmail({
       to: requestData?.client_email,
       subject,
-      html: `<h1>Reviews completed</h1><p>Both reviews have been submitted. BookAnInstructor will now review the payout.</p><p><a href="${agreementUrl}">View agreement</a></p>`,
-      text: `Reviews completed. View agreement: ${agreementUrl}`,
+      html: `<h1>Reviews completed</h1><p>Thanks, both post-class reviews have now been submitted.</p><p>BookAnInstructor will review the booking and finalise the instructor payout process.</p>${actionButton("View agreement", agreementUrl)}`,
+      text: `Reviews completed. BookAnInstructor will now review the booking and finalise the instructor payout process. View agreement: ${agreementUrl}`,
     }),
     sendBookAnInstructorEmail({
       to: instructorData?.email,
       subject,
-      html: `<h1>Reviews completed</h1><p>Both reviews have been submitted. BookAnInstructor will now review the payout.</p><p><a href="${agreementUrl}">View agreement</a></p>`,
-      text: `Reviews completed. View agreement: ${agreementUrl}`,
+      html: `<h1>Reviews completed</h1><p>Thanks, both post-class reviews have now been submitted.</p><p>BookAnInstructor will review the booking and finalise the payout process.</p>${actionButton("View agreement", agreementUrl)}`,
+      text: `Reviews completed. BookAnInstructor will now review the booking and finalise the payout process. View agreement: ${agreementUrl}`,
     }),
   ]);
 }

@@ -170,7 +170,7 @@ export async function POST(request: Request) {
         <p><strong>Contract:</strong> ${agreement.contract_number || agreement.id.slice(0, 8)}</p>
         <p><strong>Payout amount:</strong> ${agreement.instructor_payout ? `$${agreement.instructor_payout}` : "Confirmed"}</p>
         ${referenceText}
-        <p>Please allow normal bank or Stripe processing time for the funds to appear.</p>
+        <p>Please allow normal bank or Stripe processing time for the funds to appear. If anything looks incorrect, reply through BookAnInstructor so we can help.</p>
         ${actionButton("View agreement", agreementUrl)}
       `,
       text: [
@@ -179,6 +179,7 @@ export async function POST(request: Request) {
         `Contract: ${agreement.contract_number || agreement.id.slice(0, 8)}`,
         `Payout amount: ${agreement.instructor_payout ? `$${agreement.instructor_payout}` : "Confirmed"}`,
         reference?.trim() ? `Reference: ${reference.trim()}` : "",
+        "Please allow normal bank or Stripe processing time for the funds to appear.",
         `View agreement: ${agreementUrl}`,
       ]
         .filter(Boolean)
