@@ -232,7 +232,10 @@ export default function Admin() {
     [requests, instructors]
   );
 
-  async function updatePayout(agreementId: string, action: "approve" | "mark_paid") {
+  async function updatePayout(
+    agreementId: string,
+    action: "approve" | "mark_paid" | "resend_paid_email"
+  ) {
     setSavingPayoutId(agreementId);
     setPayoutMessages((current) => ({ ...current, [agreementId]: "" }));
     setPayoutErrors((current) => ({ ...current, [agreementId]: "" }));
@@ -284,13 +287,21 @@ export default function Admin() {
       [agreementId]:
         action === "approve"
           ? "Payout approved. You can now mark it as paid once the manual payment is sent."
-          : result.email?.sent
-            ? "Payout marked as paid. Email notification sent to the instructor."
-            : result.email?.skipped
-              ? `Payout marked as paid. Email notification skipped: ${result.email.reason || "No reason supplied."}`
-              : result.email?.error
-                ? `Payout marked as paid. Email notification failed: ${result.email.error}`
-                : "Payout marked as paid.",
+          : action === "resend_paid_email"
+            ? result.email?.sent
+              ? "Payout email resent to the instructor."
+              : result.email?.skipped
+                ? `Payout email skipped: ${result.email.reason || "No reason supplied."}`
+                : result.email?.error
+                  ? `Payout email failed: ${result.email.error}`
+                  : "Payout email resend completed."
+            : result.email?.sent
+              ? "Payout marked as paid. Email notification sent to the instructor."
+              : result.email?.skipped
+                ? `Payout marked as paid. Email notification skipped: ${result.email.reason || "No reason supplied."}`
+                : result.email?.error
+                  ? `Payout marked as paid. Email notification failed: ${result.email.error}`
+                  : "Payout marked as paid.",
     }));
     setSavingPayoutId(null);
   }
@@ -820,6 +831,20 @@ export default function Admin() {
               <a className="secondaryButton" href={`/agreements/${agreement.id}`}>
                 View agreement
               </a>
+              <button
+                className="secondaryButton"
+                type="button"
+                disabled={savingPayoutId === agreement.id}
+                onClick={() => updatePayout(agreement.id, "resend_paid_email")}
+              >
+                {savingPayoutId === agreement.id ? "Sending..." : "Resend payout email"}
+              </button>
+              {payoutMessages[agreement.id] && (
+                <p className="formMessage">{payoutMessages[agreement.id]}</p>
+              )}
+              {payoutErrors[agreement.id] && (
+                <p className="formMessage error">{payoutErrors[agreement.id]}</p>
+              )}
             </article>
           ))}
         </div>

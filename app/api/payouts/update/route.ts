@@ -6,7 +6,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-type PayoutAction = "approve" | "mark_paid";
+type PayoutAction = "approve" | "mark_paid" | "resend_paid_email";
 
 async function getSignedInUser(request: Request) {
   if (!supabaseUrl || !supabaseAnonKey) return null;
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Missing payout update details." }, { status: 400 });
   }
 
-  if (!["approve", "mark_paid"].includes(action)) {
+  if (!["approve", "mark_paid", "resend_paid_email"].includes(action)) {
     return NextResponse.json({ error: "Unknown payout action." }, { status: 400 });
   }
 
@@ -73,24 +73,6 @@ export async function POST(request: Request) {
     );
   }
 
-  const now = new Date().toISOString();
-  const update =
-    action === "approve"
-      ? {
-          payout_status: "approved",
-          payout_approved_at: now,
-          payout_approved_by: user.id,
-          updated_at: now,
-        }
-      : {
-          payout_status: "paid",
-          payout_paid_at: now,
-          payout_paid_by: user.id,
-          payout_reference: reference?.trim() || null,
-          payout_notes: notes?.trim() || null,
-          updated_at: now,
-        };
-
   const reviewsComplete =
     Boolean(agreement.client_review_submitted_at) &&
     Boolean(agreement.instructor_review_submitted_at);
@@ -113,24 +95,62 @@ export async function POST(request: Request) {
     );
   }
 
-  const { data: updatedAgreement, error: updateError } = await supabase
-    .from("booking_agreements")
-    .update(update)
-    .eq("id", agreementId)
-    .select(
-      "id,payout_status,payout_approved_at,payout_paid_at,payout_reference,payout_notes"
-    )
-    .single();
+  if (action === "resend_paid_email" && agreement.payout_status !== "paid") {
+    return NextResponse.json(
+      { error: "The payout must be marked paid before resending the payout email." },
+      { status: 400 }
+    );
+  }
 
-  if (updateError) {
-    return NextResponse.json({ error: updateError.message }, { status: 500 });
+  const now = new Date().toISOString();
+  let updatedAgreement = {
+    id: agreement.id,
+    payout_status: agreement.payout_status,
+    payout_approved_at: null,
+    payout_paid_at: null,
+    payout_reference: null,
+    payout_notes: null,
+  };
+
+  if (action !== "resend_paid_email") {
+    const update =
+      action === "approve"
+        ? {
+            payout_status: "approved",
+            payout_approved_at: now,
+            payout_approved_by: user.id,
+            updated_at: now,
+          }
+        : {
+            payout_status: "paid",
+            payout_paid_at: now,
+            payout_paid_by: user.id,
+            payout_reference: reference?.trim() || null,
+            payout_notes: notes?.trim() || null,
+            updated_at: now,
+          };
+
+    const { data, error: updateError } = await supabase
+      .from("booking_agreements")
+      .update(update)
+      .eq("id", agreementId)
+      .select(
+        "id,payout_status,payout_approved_at,payout_paid_at,payout_reference,payout_notes"
+      )
+      .single();
+
+    if (updateError) {
+      return NextResponse.json({ error: updateError.message }, { status: 500 });
+    }
+
+    updatedAgreement = data;
   }
 
   let emailResult:
     | { sent?: boolean; skipped?: boolean; reason?: string; error?: string }
     | null = null;
 
-  if (action === "mark_paid") {
+  if (action === "mark_paid" || action === "resend_paid_email") {
     const instructor = Array.isArray(agreement.instructor)
       ? agreement.instructor[0]
       : agreement.instructor;
