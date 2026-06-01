@@ -1004,6 +1004,77 @@ a {
   margin-top: 28px;
 }
 
+.adminWorkflow {
+  display: grid;
+  grid-template-columns: minmax(220px, .7fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  margin: 22px 0 18px;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #dce4ed;
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(25, 44, 70, .06);
+}
+
+.adminWorkflow h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.adminWorkflow p {
+  margin: 0;
+  color: #667181;
+  line-height: 1.55;
+}
+
+.adminWorkflow ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: workflow;
+}
+
+.adminWorkflow li {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  min-height: 96px;
+  padding: 16px 16px 16px 52px;
+  background: #f5f8fc;
+  border: 1px solid #e3ebf4;
+  border-radius: 8px;
+  counter-increment: workflow;
+}
+
+.adminWorkflow li::before {
+  content: counter(workflow);
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  color: #4374d1;
+  font-size: 13px;
+  font-weight: 800;
+  background: #eaf1ff;
+  border-radius: 999px;
+}
+
+.adminWorkflow strong {
+  color: #2f3747;
+}
+
+.adminWorkflow span {
+  color: #667181;
+  line-height: 1.45;
+}
+
 .adminStats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
@@ -1135,6 +1206,15 @@ a.adminStatCard:focus {
   padding: 12px 13px;
   color: #2f3747;
   font: inherit;
+}
+
+.emptyState {
+  margin: 0;
+  padding: 18px;
+  color: #667181;
+  background: #fff;
+  border: 1px dashed #cfd9e4;
+  border-radius: 8px;
 }
 
 .bookingLayout {
@@ -1783,6 +1863,11 @@ a.adminStatCard:focus {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .adminWorkflow,
+  .adminWorkflow ol {
+    grid-template-columns: 1fr;
+  }
+
   .howStep,
   .howStep.imageRight {
     grid-template-columns: 1fr;
@@ -2086,6 +2171,8 @@ a.adminStatCard:focus {
   .directoryGrid,
   .choiceGrid,
   .profileLayout,
+  .adminWorkflow,
+  .adminWorkflow ol,
   .adminStats,
   .adminQuickGrid,
   .compactRequestCard dl,

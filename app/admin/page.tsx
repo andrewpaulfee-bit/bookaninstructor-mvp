@@ -368,36 +368,65 @@ export default function Admin() {
       {loading && <p>Loading admin data...</p>}
       {error && <p className="formMessage error">{error}</p>}
 
+      <section className="adminWorkflow" aria-label="Admin workflow">
+        <div>
+          <p className="eyebrow">Daily workflow</p>
+          <h2>What needs attention?</h2>
+          <p>
+            Work from left to right: approve new submissions, monitor live bookings,
+            then finalise payouts once reviews are complete.
+          </p>
+        </div>
+        <ol>
+          <li>
+            <strong>Review new work</strong>
+            <span>Approve or request changes for jobs and instructor profiles.</span>
+          </li>
+          <li>
+            <strong>Watch active bookings</strong>
+            <span>Check selected instructors, agreements, payments, and messages.</span>
+          </li>
+          <li>
+            <strong>Close completed classes</strong>
+            <span>Make sure both reviews are submitted after the class finishes.</span>
+          </li>
+          <li>
+            <strong>Finalise payout</strong>
+            <span>Release or record payout, then confirm the instructor has been notified.</span>
+          </li>
+        </ol>
+      </section>
+
       <section className="adminStats" aria-label="Admin summary">
         <a className="adminStatCard" href="#pending-jobs">
           <span>Pending jobs</span>
           <strong>{pendingRequests.length}</strong>
-          <small>Need review before public release</small>
+          <small>Review before they appear publicly</small>
         </a>
         <a className="adminStatCard" href="#pending-instructors">
           <span>Pending instructors</span>
           <strong>{pendingInstructors.length}</strong>
-          <small>Need profile approval</small>
+          <small>Check profile details and approve listing</small>
         </a>
         <a className="adminStatCard" href="#active-bookings">
           <span>Active bookings</span>
           <strong>{activeBookings.length}</strong>
-          <small>Selected or confirmed instructors</small>
+          <small>Selected or confirmed bookings in progress</small>
         </a>
         <a className="adminStatCard" href="#ready-for-payout">
           <span>Payout review</span>
           <strong>{payoutQueueAgreements.length}</strong>
-          <small>Bookings ready for payout review</small>
+          <small>Reviews complete and payout can be actioned</small>
         </a>
         <a className="adminStatCard" href="#awaiting-reviews">
           <span>Awaiting reviews</span>
           <strong>{reviewQueueAgreements.length}</strong>
-          <small>Completed bookings waiting on client review</small>
+          <small>Completed classes still waiting on reviews</small>
         </a>
         <a className="adminStatCard" href="#completed-bookings">
           <span>Completed bookings</span>
           <strong>{completedAgreements.length}</strong>
-          <small>Finished bookings with payout marked paid</small>
+          <small>Closed bookings with payout marked paid</small>
         </a>
       </section>
 
@@ -454,7 +483,7 @@ export default function Admin() {
         </div>
 
         {!loading && pendingRequests.length === 0 && !error && (
-          <p>No jobs waiting for approval.</p>
+          <p className="emptyState">No jobs need review right now.</p>
         )}
       </section>
 
@@ -543,7 +572,7 @@ export default function Admin() {
         </div>
 
         {!loading && pendingInstructors.length === 0 && !error && (
-          <p>No instructors waiting for approval.</p>
+          <p className="emptyState">No instructor profiles need review right now.</p>
         )}
       </section>
 
@@ -595,7 +624,7 @@ export default function Admin() {
         </div>
 
         {!loading && reviewQueueAgreements.length === 0 && !error && (
-          <p>No completed bookings waiting on client reviews.</p>
+          <p className="emptyState">No completed bookings are waiting on reviews.</p>
         )}
       </section>
 
@@ -734,7 +763,7 @@ export default function Admin() {
         </div>
 
         {!loading && payoutQueueAgreements.length === 0 && !error && (
-          <p>No bookings ready for payout review.</p>
+          <p className="emptyState">No bookings are ready for payout review.</p>
         )}
       </section>
 
@@ -764,7 +793,7 @@ export default function Admin() {
         </div>
 
         {!loading && activeBookings.length === 0 && !error && (
-          <p>No selected or confirmed bookings yet.</p>
+          <p className="emptyState">No active bookings are currently in progress.</p>
         )}
       </section>
 
@@ -850,7 +879,7 @@ export default function Admin() {
         </div>
 
         {!loading && completedAgreements.length === 0 && !error && (
-          <p>No completed bookings yet.</p>
+          <p className="emptyState">No bookings have been fully completed yet.</p>
         )}
       </section>
 
