@@ -236,7 +236,7 @@ How to use:
   }
 
   .bkin-testimonials {
-    padding: 54px 0;
+    padding: 64px 0 72px;
     background: var(--cream);
   }
 
@@ -258,6 +258,10 @@ How to use:
     background: transparent;
   }
 
+  .bkin-trust h2 {
+    text-align: left;
+  }
+
   .bkin-stars {
     color: var(--gold);
     font-size: 27px;
@@ -275,55 +279,31 @@ How to use:
     font-size: 14px;
   }
 
-  .bkin-final {
-    position: relative;
-    min-height: 620px;
-    display: grid;
-    align-items: start;
-    overflow: hidden;
+  .bkin-testimonial-cta {
+    max-width: 640px;
+    margin: 36px auto 0;
+    padding: 30px 34px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .82);
+    box-shadow: 0 16px 38px rgba(35, 28, 20, .1);
     text-align: center;
-    background: var(--cream);
   }
 
-  .bkin-final-image {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .bkin-testimonial-cta h2 {
+    margin: 0 0 12px;
+    font-size: clamp(27px, 3vw, 38px);
+    line-height: 1.05;
+    text-transform: uppercase;
   }
 
-  .bkin-final-content {
-    position: relative;
-    z-index: 2;
-    display: grid;
-    justify-items: center;
-    padding: 42px 0 58px;
-  }
-
-  .bkin-final p {
-    margin: 0 0 24px;
-    font-size: 19px;
+  .bkin-testimonial-cta p {
+    margin: 0 0 22px;
+    font-size: 17px;
     font-weight: 700;
   }
 
-  .bkin-final .bkin-button-row {
+  .bkin-testimonial-cta .bkin-button-row {
     justify-content: center;
-  }
-
-  .bkin-final-quotes {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    width: 100%;
-    max-width: 980px;
-    gap: 24px;
-    margin: 0 auto 34px;
-    justify-content: center;
-  }
-
-  .bkin-final-quotes .bkin-quote {
-    text-align: left;
-    box-shadow: 0 12px 26px rgba(15, 20, 28, .09);
   }
 
   @media (max-width: 900px) {
@@ -348,7 +328,6 @@ How to use:
     }
 
     .bkin-benefits,
-    .bkin-final-quotes,
     .bkin-testimonial-grid {
       grid-template-columns: 1fr 1fr;
     }
@@ -387,7 +366,6 @@ How to use:
 
     .bkin-button-row,
     .bkin-benefits,
-    .bkin-final-quotes,
     .bkin-testimonial-grid {
       grid-template-columns: 1fr;
     }
@@ -502,55 +480,37 @@ How to use:
   </section>
 
   <section class="bkin-testimonials">
-    <div class="bkin-shell bkin-testimonial-grid">
-      <div class="bkin-trust">
-        <h2>Trusted by clients across Australia</h2>
-        <div class="bkin-stars">★★★★★</div>
-        <p>Built for schools, studios, private clients, events and workshops.</p>
+    <div class="bkin-shell">
+      <div class="bkin-testimonial-grid">
+        <div class="bkin-trust">
+          <h2>Trusted by clients across Australia</h2>
+          <div class="bkin-stars">★★★★★</div>
+          <p>Built for schools, studios, private clients, events and workshops.</p>
+        </div>
+        <article class="bkin-quote">
+          <div class="bkin-stars">★★★★★</div>
+          <p>"Found the perfect hip hop instructor for our school workshop. So easy!"</p>
+          <strong>- Emily, Teacher</strong>
+        </article>
+        <article class="bkin-quote">
+          <div class="bkin-stars">★★★★★</div>
+          <p>"Amazing instructors and a seamless booking process."</p>
+          <strong>- Sarah, Dance Studio Owner</strong>
+        </article>
+        <article class="bkin-quote">
+          <div class="bkin-stars">★★★★★</div>
+          <p>"I booked a private ballet lesson and it was fantastic."</p>
+          <strong>- Olivia, Private Client</strong>
+        </article>
       </div>
-      <article class="bkin-quote">
-        <div class="bkin-stars">★★★★★</div>
-        <p>"Found the perfect hip hop instructor for our school workshop. So easy!"</p>
-        <strong>- Emily, Teacher</strong>
-      </article>
-      <article class="bkin-quote">
-        <div class="bkin-stars">★★★★★</div>
-        <p>"Amazing instructors and a seamless booking process."</p>
-        <strong>- Sarah, Dance Studio Owner</strong>
-      </article>
-      <article class="bkin-quote">
-        <div class="bkin-stars">★★★★★</div>
-        <p>"I booked a private ballet lesson and it was fantastic."</p>
-        <strong>- Olivia, Private Client</strong>
-      </article>
-    </div>
-  </section>
 
-  <section class="bkin-final">
-    <img class="bkin-final-image" src="https://bookaninstructor.com/wp-content/uploads/2026/06/4.-Bottom-Image-with-links.png" alt="Dance and performing arts instructors ready to book" />
-    <div class="bkin-shell bkin-final-content">
-    <div class="bkin-final-quotes">
-      <article class="bkin-quote">
-        <div class="bkin-stars">★★★★★</div>
-        <p>"Found the perfect hip hop instructor for our school workshop. So easy!"</p>
-        <strong>- Emily, Teacher</strong>
-      </article>
-      <article class="bkin-quote">
-        <div class="bkin-stars">★★★★★</div>
-        <p>"Amazing instructors and a seamless booking process."</p>
-        <strong>- Sarah, Dance Studio Owner</strong>
-      </article>
-      <article class="bkin-quote">
-        <div class="bkin-stars">★★★★★</div>
-        <p>"I booked a private ballet lesson and it was fantastic."</p>
-        <strong>- Olivia, Private Client</strong>
-      </article>
-    </div>
-      <h2>Ready to get started?</h2>
-      <p>Join clients and instructors using BookAnInstructor to organise classes, workshops and bookings.</p>
-      <div class="bkin-button-row">
-        <a class="bkin-btn black" href="https://app.bookaninstructor.com/post-job">Post a Job</a>
-        <a class="bkin-btn gold" href="https://app.bookaninstructor.com/instructor-signup">Become an Instructor</a>
+      <div class="bkin-testimonial-cta">
+        <h2>Ready to get started?</h2>
+        <p>Join clients and instructors using BookAnInstructor to organise classes, workshops and bookings.</p>
+        <div class="bkin-button-row">
+          <a class="bkin-btn black" href="https://app.bookaninstructor.com/post-job">Post a Job</a>
+          <a class="bkin-btn gold" href="https://app.bookaninstructor.com/instructor-signup">Become an Instructor</a>
+        </div>
       </div>
     </div>
   </section>
