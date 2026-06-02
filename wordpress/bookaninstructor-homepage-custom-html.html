@@ -1,0 +1,557 @@
+<!--
+BookAnInstructor WordPress homepage draft.
+
+How to use:
+1. Upload your 4 section images to WordPress Media Library.
+2. Copy each Media Library file URL.
+3. Replace the four IMAGE_URL placeholders below.
+4. Paste this whole file into a WordPress "Custom HTML" block on a draft page.
+-->
+
+<style>
+  .bkin-page {
+    --ink: #070707;
+    --muted: #4f4f4f;
+    --line: #e6ddd1;
+    --gold: #d99a22;
+    --cream: #fbf6ef;
+    --white: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--ink);
+    background: var(--white);
+  }
+
+  .bkin-page * {
+    box-sizing: border-box;
+  }
+
+  .bkin-shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  .bkin-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 82px;
+    background: var(--white);
+  }
+
+  .bkin-logo {
+    color: var(--ink);
+    font-size: 19px;
+    font-weight: 900;
+    line-height: .95;
+    letter-spacing: .02em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .bkin-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 34px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .bkin-nav a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .bkin-button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    align-items: center;
+  }
+
+  .bkin-btn {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    border: 2px solid var(--ink);
+    border-radius: 8px;
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 900;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .bkin-btn.black {
+    background: var(--ink);
+    color: var(--white);
+  }
+
+  .bkin-btn.gold {
+    border-color: var(--gold);
+    background: var(--gold);
+    color: var(--white);
+  }
+
+  .bkin-hero {
+    position: relative;
+    min-height: 560px;
+    display: grid;
+    align-items: center;
+    overflow: hidden;
+    background: var(--cream);
+  }
+
+  .bkin-hero-image,
+  .bkin-section-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .bkin-hero-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .bkin-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 560px;
+    padding: 84px 0;
+  }
+
+  .bkin-hero h1 {
+    margin: 0 0 24px;
+    font-size: clamp(44px, 6vw, 76px);
+    line-height: .96;
+    letter-spacing: 0;
+  }
+
+  .bkin-hero p {
+    max-width: 430px;
+    margin: 0 0 30px;
+    color: var(--ink);
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .bkin-text-section {
+    padding: 58px 0 28px;
+    text-align: center;
+  }
+
+  .bkin-text-section h2,
+  .bkin-why h2,
+  .bkin-testimonials h2,
+  .bkin-final h2 {
+    margin: 0 0 22px;
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+
+  .bkin-search-text {
+    max-width: 940px;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1.65;
+  }
+
+  .bkin-image-band {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 22px 0;
+  }
+
+  .bkin-style-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin: 18px auto 52px;
+    padding: 0 28px;
+  }
+
+  .bkin-style-links a {
+    padding: 10px 15px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+    background: var(--white);
+  }
+
+  .bkin-why {
+    padding: 58px 0;
+    text-align: center;
+    background: var(--white);
+  }
+
+  .bkin-benefits {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 22px;
+    margin-top: 34px;
+  }
+
+  .bkin-benefit {
+    display: grid;
+    gap: 10px;
+    justify-items: center;
+  }
+
+  .bkin-icon {
+    display: grid;
+    width: 64px;
+    height: 64px;
+    place-items: center;
+    border: 1px solid #e6cfa8;
+    border-radius: 999px;
+    font-size: 27px;
+  }
+
+  .bkin-benefit h3 {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  .bkin-benefit p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .bkin-testimonials {
+    padding: 54px 0;
+    background: var(--cream);
+  }
+
+  .bkin-testimonial-grid {
+    display: grid;
+    grid-template-columns: .8fr repeat(3, 1fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  .bkin-trust,
+  .bkin-quote {
+    padding: 28px;
+    border-radius: 12px;
+    background: var(--white);
+  }
+
+  .bkin-trust {
+    background: transparent;
+  }
+
+  .bkin-stars {
+    color: var(--gold);
+    font-size: 27px;
+    letter-spacing: 2px;
+  }
+
+  .bkin-quote p {
+    margin: 12px 0 18px;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .bkin-quote strong {
+    font-size: 14px;
+  }
+
+  .bkin-final {
+    position: relative;
+    min-height: 620px;
+    display: grid;
+    align-items: start;
+    overflow: hidden;
+    text-align: center;
+    background: var(--cream);
+  }
+
+  .bkin-final-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .bkin-final-content {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    justify-items: center;
+    padding: 42px 0 58px;
+  }
+
+  .bkin-final p {
+    margin: 0 0 24px;
+    font-size: 19px;
+    font-weight: 700;
+  }
+
+  .bkin-final .bkin-button-row {
+    justify-content: center;
+  }
+
+  .bkin-final-quotes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    max-width: 980px;
+    gap: 24px;
+    margin: 0 auto 34px;
+    justify-content: center;
+  }
+
+  .bkin-final-quotes .bkin-quote {
+    text-align: left;
+    box-shadow: 0 12px 26px rgba(15, 20, 28, .09);
+  }
+
+  @media (max-width: 900px) {
+    .bkin-nav {
+      align-items: flex-start;
+      flex-direction: column;
+      padding: 18px 0;
+    }
+
+    .bkin-nav-links {
+      flex-wrap: wrap;
+      gap: 16px 22px;
+    }
+
+    .bkin-hero {
+      min-height: 620px;
+      background: #fbf6ef;
+    }
+
+    .bkin-hero-image {
+      opacity: .4;
+    }
+
+    .bkin-benefits,
+    .bkin-final-quotes,
+    .bkin-testimonial-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .bkin-trust {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .bkin-shell {
+      padding: 0 18px;
+    }
+
+    .bkin-nav-links {
+      display: grid;
+      width: 100%;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .bkin-hero {
+      min-height: auto;
+    }
+
+    .bkin-hero-content {
+      padding: 54px 0;
+    }
+
+    .bkin-hero h1 {
+      font-size: 42px;
+    }
+
+    .bkin-hero p {
+      font-size: 17px;
+    }
+
+    .bkin-button-row,
+    .bkin-benefits,
+    .bkin-final-quotes,
+    .bkin-testimonial-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .bkin-btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<main class="bkin-page">
+  <header class="bkin-shell bkin-nav">
+    <a class="bkin-logo" href="https://bookaninstructor.com" aria-label="BookAnInstructor home">
+      Book An<br />Instructor
+    </a>
+    <nav class="bkin-nav-links" aria-label="Main navigation">
+      <a href="https://app.bookaninstructor.com/instructors">Find an Instructor</a>
+      <a href="https://app.bookaninstructor.com/how-it-works">How it Works</a>
+      <a href="https://app.bookaninstructor.com/instructor-signup">For Instructors</a>
+      <a href="https://app.bookaninstructor.com/login">Log In</a>
+      <a class="bkin-btn black" href="https://app.bookaninstructor.com/post-job">Post a Job</a>
+    </nav>
+  </header>
+
+  <section class="bkin-hero">
+    <img class="bkin-hero-image" src="https://bookaninstructor.com/wp-content/uploads/2026/06/1.-Top-Hero-Image-with-buttons.png" alt="Dance instructor leaping in a bright studio" />
+    <div class="bkin-shell">
+      <div class="bkin-hero-content">
+        <h1>Find your perfect instructor today</h1>
+        <p>
+          The easy way to connect with trusted dance, fitness and performing arts
+          instructors. Post a job, compare replies and book with confidence.
+        </p>
+        <div class="bkin-button-row">
+          <a class="bkin-btn black" href="https://app.bookaninstructor.com/post-job">Post a Job</a>
+          <a class="bkin-btn gold" href="https://app.bookaninstructor.com/instructors">Find an Instructor</a>
+          <a class="bkin-btn" href="https://app.bookaninstructor.com/instructor-signup">Become an Instructor</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bkin-text-section bkin-shell">
+    <h2>How it works</h2>
+    <p class="bkin-search-text">
+      BookAnInstructor keeps the process simple: post your request, approved
+      instructors reply, you choose the right fit, then complete the booking and
+      review after the class.
+    </p>
+  </section>
+
+  <section class="bkin-image-band">
+    <img class="bkin-section-image" src="https://bookaninstructor.com/wp-content/uploads/2026/06/2.-How-it-works-who-its-for.png" alt="How BookAnInstructor works for schools, dance studios and private clients" />
+  </section>
+
+  <section class="bkin-text-section bkin-shell">
+    <h2>Popular instructor types</h2>
+    <p class="bkin-search-text">
+      Find instructors for dance classes, school workshops, studio cover, private
+      lessons, events and ongoing programs.
+    </p>
+  </section>
+
+  <section class="bkin-image-band">
+    <img class="bkin-section-image" src="https://bookaninstructor.com/wp-content/uploads/2026/06/3.-Popular-styles.png" alt="Popular instructor types including hip hop, ballet, tap, jazz, contemporary, acro, musical theatre, Pilates and yoga" />
+  </section>
+
+  <div class="bkin-style-links">
+    <a href="https://app.bookaninstructor.com/instructors?style=Hip%20hop">Hip hop</a>
+    <a href="https://app.bookaninstructor.com/instructors?style=Ballet">Ballet</a>
+    <a href="https://app.bookaninstructor.com/instructors?style=Tap">Tap</a>
+    <a href="https://app.bookaninstructor.com/instructors?style=Jazz">Jazz</a>
+    <a href="https://app.bookaninstructor.com/instructors?style=Contemporary">Contemporary</a>
+    <a href="https://app.bookaninstructor.com/instructors?style=Acro">Acro</a>
+    <a href="https://app.bookaninstructor.com/instructors?style=Musical%20theatre">Musical theatre</a>
+    <a href="https://app.bookaninstructor.com/instructors?style=Pilates">Pilates</a>
+    <a href="https://app.bookaninstructor.com/instructors?style=Yoga">Yoga</a>
+    <a href="https://app.bookaninstructor.com/instructors">Browse all instructor types</a>
+  </div>
+
+  <section class="bkin-why">
+    <div class="bkin-shell">
+      <h2>Why use our platform</h2>
+      <div class="bkin-benefits">
+        <article class="bkin-benefit">
+          <span class="bkin-icon">✓</span>
+          <h3>Reviewed profiles</h3>
+          <p>Instructor profiles are reviewed before they appear.</p>
+        </article>
+        <article class="bkin-benefit">
+          <span class="bkin-icon">✉</span>
+          <h3>In-platform messaging</h3>
+          <p>Discuss booking details safely and clearly.</p>
+        </article>
+        <article class="bkin-benefit">
+          <span class="bkin-icon">✎</span>
+          <h3>Booking agreements</h3>
+          <p>Clear booking terms for peace of mind.</p>
+        </article>
+        <article class="bkin-benefit">
+          <span class="bkin-icon">🔒</span>
+          <h3>Secure payment flow</h3>
+          <p>Payment is managed through the platform.</p>
+        </article>
+        <article class="bkin-benefit">
+          <span class="bkin-icon">★</span>
+          <h3>Reviews after completion</h3>
+          <p>Reviews help keep the marketplace trusted.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="bkin-testimonials">
+    <div class="bkin-shell bkin-testimonial-grid">
+      <div class="bkin-trust">
+        <h2>Trusted by clients across Australia</h2>
+        <div class="bkin-stars">★★★★★</div>
+        <p>Built for schools, studios, private clients, events and workshops.</p>
+      </div>
+      <article class="bkin-quote">
+        <div class="bkin-stars">★★★★★</div>
+        <p>"Found the perfect hip hop instructor for our school workshop. So easy!"</p>
+        <strong>- Emily, Teacher</strong>
+      </article>
+      <article class="bkin-quote">
+        <div class="bkin-stars">★★★★★</div>
+        <p>"Amazing instructors and a seamless booking process."</p>
+        <strong>- Sarah, Dance Studio Owner</strong>
+      </article>
+      <article class="bkin-quote">
+        <div class="bkin-stars">★★★★★</div>
+        <p>"I booked a private ballet lesson and it was fantastic."</p>
+        <strong>- Olivia, Private Client</strong>
+      </article>
+    </div>
+  </section>
+
+  <section class="bkin-final">
+    <img class="bkin-final-image" src="https://bookaninstructor.com/wp-content/uploads/2026/06/4.-Bottom-Image-with-links.png" alt="Dance and performing arts instructors ready to book" />
+    <div class="bkin-shell bkin-final-content">
+    <div class="bkin-final-quotes">
+      <article class="bkin-quote">
+        <div class="bkin-stars">★★★★★</div>
+        <p>"Found the perfect hip hop instructor for our school workshop. So easy!"</p>
+        <strong>- Emily, Teacher</strong>
+      </article>
+      <article class="bkin-quote">
+        <div class="bkin-stars">★★★★★</div>
+        <p>"Amazing instructors and a seamless booking process."</p>
+        <strong>- Sarah, Dance Studio Owner</strong>
+      </article>
+      <article class="bkin-quote">
+        <div class="bkin-stars">★★★★★</div>
+        <p>"I booked a private ballet lesson and it was fantastic."</p>
+        <strong>- Olivia, Private Client</strong>
+      </article>
+    </div>
+      <h2>Ready to get started?</h2>
+      <p>Join clients and instructors using BookAnInstructor to organise classes, workshops and bookings.</p>
+      <div class="bkin-button-row">
+        <a class="bkin-btn black" href="https://app.bookaninstructor.com/post-job">Post a Job</a>
+        <a class="bkin-btn gold" href="https://app.bookaninstructor.com/instructor-signup">Become an Instructor</a>
+      </div>
+    </div>
+  </section>
+</main>
