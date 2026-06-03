@@ -174,6 +174,109 @@ How to use:
     padding: 22px 0;
   }
 
+  .bkin-steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 38px;
+    text-align: left;
+  }
+
+  .bkin-step {
+    position: relative;
+    display: grid;
+    gap: 14px;
+    padding: 0 4px;
+  }
+
+  .bkin-step-icon {
+    display: grid;
+    width: 72px;
+    height: 72px;
+    place-items: center;
+    border: 2px solid #e7c37c;
+    border-radius: 999px;
+    color: var(--ink);
+    font-size: 30px;
+    font-weight: 900;
+  }
+
+  .bkin-step-number {
+    display: inline-grid;
+    width: 24px;
+    height: 24px;
+    place-items: center;
+    margin-right: 8px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .bkin-step h3 {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.2;
+  }
+
+  .bkin-step p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .bkin-audience {
+    padding: 24px 0 40px;
+  }
+
+  .bkin-audience h2 {
+    margin: 0 0 28px;
+    text-align: center;
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+
+  .bkin-audience-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+  }
+
+  .bkin-audience-card {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--white);
+    box-shadow: 0 14px 32px rgba(25, 20, 12, .08);
+  }
+
+  .bkin-audience-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .bkin-audience-card div {
+    padding: 22px;
+  }
+
+  .bkin-audience-card h3 {
+    margin: 0 0 10px;
+    font-size: 23px;
+    line-height: 1.15;
+  }
+
+  .bkin-audience-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
   .bkin-style-links {
     display: flex;
     flex-wrap: wrap;
@@ -286,7 +389,9 @@ How to use:
       opacity: .34;
     }
 
-    .bkin-benefits {
+    .bkin-audience-grid,
+    .bkin-benefits,
+    .bkin-steps {
       grid-template-columns: 1fr 1fr;
     }
 
@@ -322,8 +427,10 @@ How to use:
       font-size: 17px;
     }
 
+    .bkin-audience-grid,
     .bkin-button-row,
-    .bkin-benefits {
+    .bkin-benefits,
+    .bkin-steps {
       grid-template-columns: 1fr;
     }
 
@@ -348,7 +455,7 @@ How to use:
   </header>
 
   <section class="bkin-hero">
-    <img class="bkin-hero-image" src="assets/home-hero.png" alt="Dance instructor leaping in a bright studio" />
+    <img class="bkin-hero-image" src="assets/hero-contemporary.png" alt="Contemporary dance instructor in a high extension" />
     <div class="bkin-shell">
       <div class="bkin-hero-content">
         <h1>Find your perfect instructor today</h1>
@@ -372,10 +479,55 @@ How to use:
       instructors reply, you choose the right fit, then complete the booking and
       review after the class.
     </p>
+    <div class="bkin-steps" aria-label="How BookAnInstructor works">
+      <article class="bkin-step">
+        <span class="bkin-step-icon">1</span>
+        <h3><span class="bkin-step-number">1</span>Post your request</h3>
+        <p>Tell us what you need. It is quick and easy.</p>
+      </article>
+      <article class="bkin-step">
+        <span class="bkin-step-icon">2</span>
+        <h3><span class="bkin-step-number">2</span>Approved instructors reply</h3>
+        <p>Qualified instructors send you their interest.</p>
+      </article>
+      <article class="bkin-step">
+        <span class="bkin-step-icon">3</span>
+        <h3><span class="bkin-step-number">3</span>Choose your instructor</h3>
+        <p>Compare profiles, reviews and availability.</p>
+      </article>
+      <article class="bkin-step">
+        <span class="bkin-step-icon">4</span>
+        <h3><span class="bkin-step-number">4</span>Complete and review</h3>
+        <p>Pay securely, complete your session and leave a review.</p>
+      </article>
+    </div>
   </section>
 
-  <section class="bkin-image-band">
-    <img class="bkin-section-image" src="assets/home-how-it-works.png" alt="How BookAnInstructor works for schools, dance studios and private clients" />
+  <section class="bkin-audience bkin-shell">
+    <h2>Who it's for</h2>
+    <div class="bkin-audience-grid">
+      <article class="bkin-audience-card">
+        <img src="assets/who-schools.png" alt="Dance students in a school workshop" />
+        <div>
+          <h3>Schools</h3>
+          <p>Curriculum support, guest instructors, workshops and specialist programs.</p>
+        </div>
+      </article>
+      <article class="bkin-audience-card">
+        <img src="assets/who-studios.png" alt="Dance studio class with students and instructor" />
+        <div>
+          <h3>Dance studios</h3>
+          <p>Cover classes, workshops, term programs and specialist training.</p>
+        </div>
+      </article>
+      <article class="bkin-audience-card">
+        <img src="assets/who-private.png" alt="Private client movement class in a studio" />
+        <div>
+          <h3>Private clients</h3>
+          <p>One-on-one lessons, small group sessions and tailored instruction.</p>
+        </div>
+      </article>
+    </div>
   </section>
 
   <section class="bkin-text-section bkin-shell">
