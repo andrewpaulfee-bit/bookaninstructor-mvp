@@ -10,15 +10,15 @@ How to use:
 
 <style>
   .bkin-page {
-    --ink: #070707;
-    --muted: #4f4f4f;
-    --line: #e6ddd1;
-    --gold: #d99a22;
-    --cream: #fbf6ef;
+    --ink: #2f3747;
+    --muted: #667181;
+    --line: #dce4ed;
+    --gold: #4374d1;
+    --cream: #f7f9fb;
     --white: #fff;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Arial, sans-serif;
     color: var(--ink);
-    background: var(--white);
+    background: var(--cream);
   }
 
   .bkin-page * {
@@ -42,8 +42,8 @@ How to use:
 
   .bkin-logo {
     color: var(--ink);
-    font-size: 19px;
-    font-weight: 900;
+    font-size: 18px;
+    font-weight: 700;
     line-height: .95;
     letter-spacing: .02em;
     text-decoration: none;
@@ -55,7 +55,7 @@ How to use:
     align-items: center;
     gap: 34px;
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 400;
   }
 
   .bkin-nav a {
@@ -77,10 +77,10 @@ How to use:
     justify-content: center;
     padding: 14px 28px;
     border: 2px solid var(--ink);
-    border-radius: 8px;
+    border-radius: 6px;
     color: var(--ink);
     font-size: 15px;
-    font-weight: 900;
+    font-weight: 700;
     line-height: 1;
     text-decoration: none;
     white-space: nowrap;
@@ -130,19 +130,19 @@ How to use:
   }
 
   .bkin-hero h1 {
-    margin: 0 0 24px;
-    font-size: clamp(44px, 6vw, 76px);
-    line-height: .96;
+    margin: 0 0 18px;
+    font-size: clamp(44px, 5vw, 60px);
+    line-height: 1.04;
     letter-spacing: 0;
   }
 
   .bkin-hero p {
     max-width: 430px;
     margin: 0 0 30px;
-    color: var(--ink);
-    font-size: 21px;
-    font-weight: 600;
-    line-height: 1.35;
+    color: var(--muted);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.45;
   }
 
   .bkin-text-section {
@@ -155,9 +155,9 @@ How to use:
   .bkin-testimonials h2,
   .bkin-final h2 {
     margin: 0 0 22px;
-    font-size: clamp(28px, 3vw, 40px);
+    font-size: clamp(28px, 3vw, 36px);
     line-height: 1.05;
-    text-transform: uppercase;
+    text-transform: none;
   }
 
   .bkin-search-text {
@@ -165,7 +165,7 @@ How to use:
     margin: 0 auto;
     color: var(--muted);
     font-size: 18px;
-    line-height: 1.65;
+    line-height: 1.5;
   }
 
   .bkin-image-band {
@@ -179,13 +179,14 @@ How to use:
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 24px;
     margin-top: 38px;
-    text-align: left;
+    text-align: center;
   }
 
   .bkin-step {
     position: relative;
     display: grid;
     gap: 14px;
+    justify-items: center;
     padding: 0 4px;
   }
 
@@ -194,11 +195,11 @@ How to use:
     width: 72px;
     height: 72px;
     place-items: center;
-    border: 2px solid #e7c37c;
+    border: 2px solid #dce4ed;
     border-radius: 999px;
     color: var(--ink);
     font-size: 30px;
-    font-weight: 900;
+    font-weight: 700;
   }
 
   .bkin-step-number {
@@ -211,12 +212,13 @@ How to use:
     background: var(--ink);
     color: var(--white);
     font-size: 13px;
-    font-weight: 900;
+    font-weight: 700;
   }
 
   .bkin-step h3 {
     margin: 0;
     font-size: 17px;
+    font-weight: 700;
     line-height: 1.2;
   }
 
@@ -234,9 +236,9 @@ How to use:
   .bkin-audience h2 {
     margin: 0 0 28px;
     text-align: center;
-    font-size: clamp(28px, 3vw, 40px);
+    font-size: clamp(28px, 3vw, 36px);
     line-height: 1.05;
-    text-transform: uppercase;
+    text-transform: none;
   }
 
   .bkin-audience-grid {
@@ -248,7 +250,7 @@ How to use:
   .bkin-audience-card {
     overflow: hidden;
     border: 1px solid var(--line);
-    border-radius: 12px;
+    border-radius: 8px;
     background: var(--white);
     box-shadow: 0 14px 32px rgba(25, 20, 12, .08);
   }
@@ -266,7 +268,8 @@ How to use:
 
   .bkin-audience-card h3 {
     margin: 0 0 10px;
-    font-size: 23px;
+    font-size: 24px;
+    font-weight: 700;
     line-height: 1.15;
   }
 
