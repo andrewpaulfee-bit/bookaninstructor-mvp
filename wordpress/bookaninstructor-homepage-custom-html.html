@@ -343,37 +343,97 @@ How to use:
   }
 
   .bkin-testimonials {
-    padding: 48px 0 72px;
+    overflow: hidden;
+    padding: 64px 0 76px;
     background: var(--cream);
   }
 
-  .bkin-bottom-art {
+  .bkin-bottom-layout {
     position: relative;
-    max-width: 1200px;
-    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 36px;
+    align-items: center;
   }
 
-  .bkin-bottom-art img {
+  .bkin-bottom-content {
+    display: grid;
+    gap: 28px;
+    justify-items: center;
+  }
+
+  .bkin-quote-grid {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .bkin-quote-card {
+    min-height: 230px;
+    padding: 30px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--white);
+    box-shadow: 0 14px 32px rgba(25, 44, 70, .08);
+  }
+
+  .bkin-stars {
+    margin: 0 0 14px;
+    color: #d99a22;
+    font-size: 28px;
+    letter-spacing: 1px;
+  }
+
+  .bkin-quote-card p {
+    margin: 0 0 18px;
+    color: var(--ink);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .bkin-quote-card strong {
+    color: var(--ink);
+    font-size: 15px;
+  }
+
+  .bkin-bottom-cta {
+    width: min(100%, 640px);
+    padding: 30px 34px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--white);
+    text-align: center;
+    box-shadow: 0 14px 32px rgba(25, 44, 70, .08);
+  }
+
+  .bkin-bottom-cta h2 {
+    margin: 0 0 10px;
+    font-size: clamp(28px, 3vw, 36px);
+    line-height: 1.05;
+  }
+
+  .bkin-bottom-cta p {
+    margin: 0 0 22px;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .bkin-bottom-cta .bkin-button-row {
+    justify-content: center;
+  }
+
+  .bkin-bottom-dancer {
     display: block;
     width: 100%;
-    height: auto;
+    max-height: 520px;
+    object-fit: contain;
   }
 
-  .bkin-bottom-art-link {
-    position: absolute;
-    top: 63.5%;
-    height: 9.5%;
-    border-radius: 8px;
-  }
-
-  .bkin-bottom-art-link.post-job {
-    left: 41%;
-    width: 9%;
-  }
-
-  .bkin-bottom-art-link.become-instructor {
-    left: 51%;
-    width: 12%;
+  .bkin-bottom-mobile-link {
+    display: none;
   }
 
   @media (max-width: 900px) {
@@ -394,8 +454,14 @@ How to use:
 
     .bkin-audience-grid,
     .bkin-benefits,
+    .bkin-bottom-layout,
+    .bkin-quote-grid,
     .bkin-steps {
       grid-template-columns: 1fr 1fr;
+    }
+
+    .bkin-bottom-dancer {
+      max-height: 380px;
     }
 
     .bkin-trust {
@@ -433,8 +499,14 @@ How to use:
     .bkin-audience-grid,
     .bkin-button-row,
     .bkin-benefits,
+    .bkin-bottom-layout,
+    .bkin-quote-grid,
     .bkin-steps {
       grid-template-columns: 1fr;
+    }
+
+    .bkin-bottom-dancer {
+      max-height: 320px;
     }
 
     .bkin-btn {
@@ -589,10 +661,37 @@ How to use:
 
   <section class="bkin-testimonials">
     <div class="bkin-shell">
-      <div class="bkin-bottom-art">
-        <img src="assets/home-bottom.png" alt="Trusted by clients across Australia and ready to get started with BookAnInstructor" />
-        <a class="bkin-bottom-art-link post-job" href="https://app.bookaninstructor.com/post-job" aria-label="Post a Job"></a>
-        <a class="bkin-bottom-art-link become-instructor" href="https://app.bookaninstructor.com/instructor-signup" aria-label="Become an Instructor"></a>
+      <div class="bkin-bottom-layout">
+        <div class="bkin-bottom-content">
+          <div class="bkin-quote-grid" aria-label="Client feedback">
+            <article class="bkin-quote-card">
+              <div class="bkin-stars">★★★★★</div>
+              <p>"Found the perfect hip hop instructor for our school workshop. So easy!"</p>
+              <strong>- Emily, Teacher</strong>
+            </article>
+            <article class="bkin-quote-card">
+              <div class="bkin-stars">★★★★★</div>
+              <p>"Amazing instructors and a seamless booking process."</p>
+              <strong>- Sarah, Dance Studio Owner</strong>
+            </article>
+            <article class="bkin-quote-card">
+              <div class="bkin-stars">★★★★★</div>
+              <p>"I booked a private ballet lesson and it was fantastic."</p>
+              <strong>- Olivia, Private Client</strong>
+            </article>
+          </div>
+
+          <div class="bkin-bottom-cta">
+            <h2>Ready to get started?</h2>
+            <p>Post a request or create your instructor profile today.</p>
+            <div class="bkin-button-row">
+              <a class="bkin-btn black" href="https://app.bookaninstructor.com/post-job">Post a Job</a>
+              <a class="bkin-btn gold" href="https://app.bookaninstructor.com/instructor-signup">Become an Instructor</a>
+            </div>
+          </div>
+        </div>
+
+        <img class="bkin-bottom-dancer" src="assets/bottom-hip-hop.png" alt="Hip hop dancer performing a one handed freeze" />
       </div>
     </div>
   </section>
