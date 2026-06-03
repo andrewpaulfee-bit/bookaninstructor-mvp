@@ -98,15 +98,18 @@ How to use:
   }
 
   .bkin-hero {
-    position: relative;
     min-height: 540px;
-    display: grid;
-    align-items: center;
-    overflow: hidden;
     background: #fff;
   }
 
-  .bkin-hero-image,
+  .bkin-hero-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 500px);
+    gap: 44px;
+    align-items: center;
+    min-height: 540px;
+  }
+
   .bkin-section-image {
     width: 100%;
     height: auto;
@@ -114,19 +117,14 @@ How to use:
   }
 
   .bkin-hero-image {
-    position: absolute;
-    top: 0;
-    right: 6%;
-    bottom: 0;
-    width: 56%;
-    height: 100%;
+    display: block;
+    width: 100%;
+    max-height: 500px;
     object-fit: contain;
-    object-position: center left;
+    object-position: center;
   }
 
   .bkin-hero-content {
-    position: relative;
-    z-index: 2;
     max-width: 560px;
     padding: 84px 0;
   }
@@ -353,8 +351,8 @@ How to use:
   .bkin-bottom-layout {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 300px;
-    gap: 36px;
+    grid-template-columns: minmax(0, 1fr) 420px;
+    gap: 42px;
     align-items: center;
   }
 
@@ -430,7 +428,7 @@ How to use:
   .bkin-bottom-dancer {
     display: block;
     width: 100%;
-    max-height: 520px;
+    max-height: 620px;
     object-fit: contain;
   }
 
@@ -450,10 +448,14 @@ How to use:
       gap: 16px 22px;
     }
 
+    .bkin-hero-inner {
+      grid-template-columns: 1fr;
+      gap: 18px;
+      min-height: auto;
+    }
+
     .bkin-hero-image {
-      right: 0;
-      width: 72%;
-      opacity: .34;
+      max-height: 360px;
     }
 
     .bkin-audience-grid,
@@ -465,7 +467,7 @@ How to use:
     }
 
     .bkin-bottom-dancer {
-      max-height: 380px;
+      max-height: 460px;
     }
 
     .bkin-trust {
@@ -510,7 +512,7 @@ How to use:
     }
 
     .bkin-bottom-dancer {
-      max-height: 320px;
+      max-height: 380px;
     }
 
     .bkin-btn {
@@ -534,8 +536,7 @@ How to use:
   </header>
 
   <section class="bkin-hero">
-    <img class="bkin-hero-image" src="assets/hero-contemporary.png" alt="Contemporary dance instructor in a high extension" />
-    <div class="bkin-shell">
+    <div class="bkin-shell bkin-hero-inner">
       <div class="bkin-hero-content">
         <h1>Find your perfect instructor today</h1>
         <p>
@@ -548,6 +549,7 @@ How to use:
           <a class="bkin-btn" href="https://app.bookaninstructor.com/instructor-signup">Become an Instructor</a>
         </div>
       </div>
+      <img class="bkin-hero-image" src="assets/hero-contemporary.png" alt="Contemporary dance instructor in a high extension" />
     </div>
   </section>
 
