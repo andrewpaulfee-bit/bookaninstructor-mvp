@@ -41,13 +41,15 @@ How to use:
   }
 
   .bkin-logo {
-    color: var(--ink);
-    font-size: 18px;
-    font-weight: 700;
-    line-height: .95;
-    letter-spacing: .02em;
+    display: inline-flex;
+    align-items: center;
     text-decoration: none;
-    text-transform: uppercase;
+  }
+
+  .bkin-logo img {
+    display: block;
+    width: 86px;
+    height: auto;
   }
 
   .bkin-nav-links {
@@ -443,6 +445,10 @@ How to use:
       padding: 18px 0;
     }
 
+    .bkin-logo img {
+      width: 72px;
+    }
+
     .bkin-nav-links {
       flex-wrap: wrap;
       gap: 16px 22px;
@@ -524,7 +530,7 @@ How to use:
 <main class="bkin-page">
   <header class="bkin-shell bkin-nav">
     <a class="bkin-logo" href="https://bookaninstructor.com" aria-label="BookAnInstructor home">
-      Book An<br />Instructor
+      <img src="assets/logo-mark.png" alt="BookAnInstructor" />
     </a>
     <nav class="bkin-nav-links" aria-label="Main navigation">
       <a href="https://app.bookaninstructor.com/instructors">Find an Instructor</a>
