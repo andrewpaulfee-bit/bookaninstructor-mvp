@@ -272,6 +272,72 @@ Review daily:
 
 Do not optimise for cheap clicks. Optimise for real posted jobs and paid bookings.
 
+## Extra Notes From Planning Document
+
+The older planning document has useful positioning, but some details are outdated. Use the strategic ideas, not the legacy wording.
+
+Use:
+
+- BookAnInstructor helps instructors focus on teaching while the platform handles introductions, messaging, booking flow, agreements, secure payment collection, reviews and payout review.
+- Clients can post a request, receive instructor replies, compare profiles, confirm an instructor, pay securely and review after completion.
+- The strongest client audiences are schools, dance studios, private clients, events and workshops.
+- The strongest instructor audiences are dance teachers, fitness instructors, performing arts instructors, workshop presenters, studio cover teachers and specialist coaches.
+- Instructor acquisition is important, but it should be its own campaign. Do not mix instructor signups and client bookings in the same first Search campaign.
+
+Do not use:
+
+- RAW Dance references.
+- Insurance claims.
+- Old launch dates.
+- Old vendor wording.
+- Old commission wording such as 7%.
+
+Current commercial wording:
+
+- Free instructor profiles.
+- BookAnInstructor commission is 10% on the first booking, then 5% on future bookings with the same client, if retained through the platform.
+- Payments are collected through BookAnInstructor and payouts are reviewed/released after the class and review process.
+
+## Future Instructor Recruitment Campaign
+
+After the client booking campaign is working, create a separate instructor signup campaign.
+
+Campaign name:
+
+`AU | Search | Instructor Signup | Supply`
+
+Primary conversion:
+
+- Instructor profile submitted.
+
+Suggested ad groups:
+
+- Dance Teacher Opportunities
+- Studio Cover Teachers
+- Performing Arts Instructors
+- Fitness and Wellness Instructors
+
+Keywords:
+
+- "dance teacher jobs"
+- "dance instructor opportunities"
+- "dance teacher platform"
+- "find dance teaching work"
+- "studio cover teacher"
+- "relief dance teacher jobs"
+- "performing arts teacher jobs"
+- "pilates instructor work"
+- "yoga instructor work"
+
+Ad angles:
+
+- Reach more clients without upfront profile fees.
+- Receive booking enquiries from schools, studios, private clients and events.
+- Keep messages, agreements, payments and reviews organised in one place.
+- Build your profile and review history through BookAnInstructor.
+
+Keep this campaign separate from client bookings so Google can optimise each campaign toward the right conversion.
+
 ## Next Implementation Tasks
 
 1. Add homepage SEO title and meta description in WordPress SEO settings.
