@@ -65,6 +65,14 @@ async function publishWithLoginPassword() {
   const loginUrl = `${WP_BASE_URL}/wp-login.php`;
   const loginPage = await fetch(loginUrl);
   cookies = mergeSetCookie(cookies, loginPage);
+  const loginHtml = await loginPage.text();
+
+  const challenge = loginHtml.match(
+    /<label[^>]*for="jetpack_protect_answer"[^>]*>\s*(\d+)\s*&nbsp;\s*\+\s*&nbsp;\s*(\d+)\s*&nbsp;\s*=\s*&nbsp;/i
+  );
+  const challengeToken = loginHtml.match(
+    /name="jetpack_protect_answer"\s+value="([^"]+)"/i
+  )?.[1];
 
   const loginBody = new URLSearchParams({
     log: WP_USERNAME,
@@ -73,6 +81,14 @@ async function publishWithLoginPassword() {
     redirect_to: `${WP_BASE_URL}/wp-admin/`,
     testcookie: "1",
   });
+
+  if (challenge && challengeToken) {
+    loginBody.set(
+      "jetpack_protect_num",
+      String(Number(challenge[1]) + Number(challenge[2]))
+    );
+    loginBody.set("jetpack_protect_answer", challengeToken);
+  }
 
   const loginResponse = await fetch(loginUrl, {
     method: "POST",
