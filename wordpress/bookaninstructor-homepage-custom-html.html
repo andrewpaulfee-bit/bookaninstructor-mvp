@@ -154,6 +154,7 @@ WP_USERNAME='your-user' WP_APP_PASSWORD='xxxx xxxx xxxx xxxx xxxx xxxx' node scr
 
   .bkin-text-section h2,
   .bkin-why h2,
+  .bkin-guides h2,
   .bkin-testimonials h2,
   .bkin-final h2 {
     margin: 0 0 22px;
@@ -434,6 +435,89 @@ WP_USERNAME='your-user' WP_APP_PASSWORD='xxxx xxxx xxxx xxxx xxxx xxxx' node scr
     object-fit: contain;
   }
 
+  .bkin-guides {
+    padding: 64px 0;
+    background: var(--cream);
+  }
+
+  .bkin-guides-header {
+    max-width: 760px;
+    margin: 0 auto 34px;
+    text-align: center;
+  }
+
+  .bkin-guides-header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  .bkin-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .bkin-guide-card {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+    min-height: 260px;
+    padding: 26px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--ink);
+    text-decoration: none;
+    background: var(--white);
+    box-shadow: 0 14px 32px rgba(25, 44, 70, .08);
+  }
+
+  .bkin-guide-card span {
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .bkin-guide-card h3 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.16;
+  }
+
+  .bkin-guide-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .bkin-guide-card strong {
+    color: var(--ink);
+    font-size: 14px;
+  }
+
+  .bkin-guides-link {
+    display: flex;
+    justify-content: center;
+    margin-top: 28px;
+  }
+
+  .bkin-guides-link a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 22px;
+    border: 1px solid var(--ink);
+    border-radius: 8px;
+    color: var(--ink);
+    font-weight: 800;
+    text-decoration: none;
+  }
+
   .bkin-bottom-mobile-link {
     display: none;
   }
@@ -467,6 +551,7 @@ WP_USERNAME='your-user' WP_APP_PASSWORD='xxxx xxxx xxxx xxxx xxxx xxxx' node scr
     .bkin-audience-grid,
     .bkin-benefits,
     .bkin-bottom-layout,
+    .bkin-guide-grid,
     .bkin-quote-grid,
     .bkin-steps {
       grid-template-columns: 1fr 1fr;
@@ -512,6 +597,7 @@ WP_USERNAME='your-user' WP_APP_PASSWORD='xxxx xxxx xxxx xxxx xxxx xxxx' node scr
     .bkin-button-row,
     .bkin-benefits,
     .bkin-bottom-layout,
+    .bkin-guide-grid,
     .bkin-quote-grid,
     .bkin-steps {
       grid-template-columns: 1fr;
@@ -667,6 +753,47 @@ WP_USERNAME='your-user' WP_APP_PASSWORD='xxxx xxxx xxxx xxxx xxxx xxxx' node scr
           <h3>Reviews after completion</h3>
           <p>Reviews help keep the marketplace trusted.</p>
         </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="bkin-guides">
+    <div class="bkin-shell">
+      <div class="bkin-guides-header">
+        <h2>Instructor booking guides</h2>
+        <p>
+          Practical articles for schools, studios, private clients and instructors
+          who want to book, compare and deliver great classes with confidence.
+        </p>
+      </div>
+      <div class="bkin-guide-grid">
+        <a class="bkin-guide-card" href="https://bookaninstructor.com/how-to-book-a-dance-teacher-for-a-school-workshop">
+          <span>Schools</span>
+          <h3>How to book a dance teacher for a school workshop</h3>
+          <p>What to include in your request, how replies work and how to choose the right instructor.</p>
+          <strong>Read guide</strong>
+        </a>
+        <a class="bkin-guide-card" href="https://bookaninstructor.com/dance-studio-cover-teachers">
+          <span>Studios</span>
+          <h3>How dance studios can find reliable cover teachers</h3>
+          <p>Plan cover classes, workshops and term programs with clearer booking details.</p>
+          <strong>Read guide</strong>
+        </a>
+        <a class="bkin-guide-card" href="https://bookaninstructor.com/what-to-look-for-in-a-professional-instructor">
+          <span>Clients</span>
+          <h3>What to look for in a professional instructor</h3>
+          <p>Experience, communication, reliability, reviews and the signs of a strong fit.</p>
+          <strong>Read guide</strong>
+        </a>
+        <a class="bkin-guide-card" href="https://bookaninstructor.com/private-dance-lessons-choose-the-right-instructor">
+          <span>Private lessons</span>
+          <h3>Private dance lessons: choosing the right instructor</h3>
+          <p>Match your style, level, goals and budget before booking a private lesson.</p>
+          <strong>Read guide</strong>
+        </a>
+      </div>
+      <div class="bkin-guides-link">
+        <a href="https://bookaninstructor.com/articles">View all booking guides</a>
       </div>
     </div>
   </section>
