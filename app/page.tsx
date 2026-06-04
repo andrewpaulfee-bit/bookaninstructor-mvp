@@ -50,7 +50,7 @@ export default function Home() {
         }}
       />
       <nav className="nav">
-        <img src="/logo.png" className="logo" />
+        <img src="/logo-mark.png" className="logo" alt="BookAnInstructor" />
       </nav>
 
       <section className="hero">

@@ -22,7 +22,7 @@ function emailTemplate(content: string) {
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;background:#ffffff;border:1px solid #dce4ed;border-radius:10px;overflow:hidden;">
               <tr>
                 <td style="padding:24px 28px 12px;">
-                  <img src="${appBaseUrl}/logo.png" alt="BookAnInstructor" width="90" style="display:block;width:90px;height:auto;margin:0 0 18px;" />
+                  <img src="${appBaseUrl}/logo-mark.png" alt="BookAnInstructor" width="72" style="display:block;width:72px;height:auto;margin:0 0 18px;" />
                 </td>
               </tr>
               <tr>

@@ -39,7 +39,7 @@ export const organizationJsonLd = {
   "@type": "Organization",
   name: "BookAnInstructor",
   url: siteUrl,
-  logo: absoluteUrl("/logo.png"),
+  logo: absoluteUrl("/logo-mark.png"),
   email: "info@bookaninstructor.com",
 };
 

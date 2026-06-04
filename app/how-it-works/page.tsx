@@ -42,8 +42,6 @@ export default function HowItWorks() {
       <Nav />
 
       <section className="howHero">
-        <div className="dotAccent" />
-        <p className="eyebrow">How it works</p>
         <h1>Finding your perfect instructor is simple.</h1>
         <p>
           BookAnInstructor keeps the process clear: reviewed job posts, approved

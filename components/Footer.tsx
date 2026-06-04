@@ -40,7 +40,7 @@ export default function Footer() {
   return (
     <footer className="siteFooter">
       <div className="footerBrand">
-        <img src="/logo.png" alt="BookAnInstructor" />
+        <img src="/logo-mark.png" alt="BookAnInstructor" />
       </div>
 
       <div className="footerColumn">
