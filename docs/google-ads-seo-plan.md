@@ -295,8 +295,95 @@ Do not use:
 Current commercial wording:
 
 - Free instructor profiles.
-- BookAnInstructor commission is 10% on the first booking, then 5% on future bookings with the same client, if retained through the platform.
+- Suggested instructor plans:
+  - Free Instructor Plan: basic profile, apply for jobs and pay 15% commission only on confirmed bookings.
+  - Pro Instructor Plan: $29/month, higher profile visibility, featured profile placement, CRM/enquiry tools and reduced commission.
+- Clients can use BookAnInstructor for free and only pay when they choose and confirm an instructor.
 - Payments are collected through BookAnInstructor and payouts are reviewed/released after the class and review process.
+
+## SEO Article Roadmap
+
+Use the article ideas from the content planning document as supporting SEO content. These should live on `bookaninstructor.com` and internally link to the app actions:
+
+- Post a job: `https://app.bookaninstructor.com/post-job`
+- Find an instructor: `https://app.bookaninstructor.com/instructors`
+- Become an instructor: `https://app.bookaninstructor.com/instructor-signup`
+
+Source reference:
+
+`https://docs.google.com/document/d/1iEfBfWQqp99SAPLxA4v0w94qaM-cLt5rWmXCjrqiZSE/edit`
+
+### Priority Article Cluster: Dance Styles
+
+Create short, useful articles for style-specific searches. Each article should explain the style, who it suits, common booking uses, and include clear calls to action.
+
+Recommended first articles:
+
+- `Hire a Hip Hop Instructor for Schools, Studios and Events`
+- `How to Book a Ballet Teacher for Private Lessons or Workshops`
+- `Tap Dance Teachers: What to Look For Before You Book`
+- `Jazz Dance Instructors for Schools, Studios and Performance Programs`
+- `Contemporary Dance Teachers for Workshops and Private Lessons`
+- `Musical Theatre Instructors for Schools, Studios and Events`
+- `Acro Dance Teachers: Safety, Skills and What to Ask Before Booking`
+- `Bollywood Dance Instructors for Cultural Events and Workshops`
+- `Salsa and Social Dance Instructors for Private Lessons and Events`
+- `Wedding Dance Teachers: How to Choose the Right Instructor`
+
+Each style article should target:
+
+- `[style] instructor`
+- `[style] teacher`
+- `[style] lessons`
+- `[style] workshop`
+- `[style] instructor Brisbane`
+- `hire [style] teacher`
+
+### Priority Article Cluster: Buyer Education
+
+These articles support clients who are close to booking but need confidence.
+
+Recommended first articles:
+
+- `What to Look for in a Professional Instructor`
+- `How to Book a Dance Teacher for a School Workshop`
+- `How Dance Studios Can Find Reliable Cover Teachers`
+- `Private Dance Lessons: How to Choose the Right Instructor`
+- `Questions to Ask Before Booking a Performing Arts Instructor`
+- `How BookAnInstructor Keeps Messages, Agreements, Payments and Reviews in One Place`
+
+### Priority Article Cluster: Instructor Education
+
+These articles help attract supply and support future Pro plan positioning.
+
+Recommended first articles:
+
+- `How to Create a Strong Instructor Profile`
+- `What Makes a Great Instructor?`
+- `How Great Instructors Use Feedback to Improve Student Results`
+- `How Empathy Shapes Great Teaching`
+- `How to Write a Strong Reply to a Client Booking Request`
+- `How Instructors Can Get More Repeat Bookings`
+
+### Social-to-SEO Reuse
+
+The planning document includes many style explainer paragraphs and dance legend notes. Use these as raw source ideas, but rewrite them into original, BookAnInstructor-branded articles before publishing. Each article should be practical and booking-focused rather than generic history content.
+
+Good social/post themes:
+
+- Spotlight on dance styles.
+- Instructor tips.
+- Dance legends and influence.
+- School workshop ideas.
+- Studio cover and relief teacher advice.
+- How to choose a safe, professional instructor.
+
+Avoid:
+
+- Copy-pasting long generic passages.
+- Publishing thin articles with only history and no booking intent.
+- Using claims that BookAnInstructor cannot yet verify.
+- Hashtag-heavy copy on website pages.
 
 ## Future Instructor Recruitment Campaign
 
