@@ -68,80 +68,87 @@ export default function Nav() {
 
   return (
     <div className="nav" ref={navRef}>
-      <Link href="/">Home</Link>
-      <Link href="/how-it-works">How it Works</Link>
-      <div className="navGroup" onMouseLeave={() => setOpenMenu(null)}>
-        <button
-          aria-expanded={openMenu === "account"}
-          aria-haspopup="menu"
-          className="navMenuButton"
-          type="button"
-          onClick={() => toggleMenu("account")}
-        >
-          Account
-        </button>
-        {openMenu === "account" && (
-        <div className="navDropdown" role="menu">
-          {session && (
-            <Link href={role === "instructor" ? "/instructor-signup" : "/client-profile"} onClick={() => setOpenMenu(null)}>
-              My profile
-            </Link>
+      <Link className="navLogo" href="/" aria-label="BookAnInstructor home">
+        <img src="/logo-mark.png" alt="BookAnInstructor" />
+      </Link>
+
+      <div className="navMenu">
+        <Link href="/how-it-works">How it Works</Link>
+        <div className="navGroup" onMouseLeave={() => setOpenMenu(null)}>
+          <button
+            aria-expanded={openMenu === "account"}
+            aria-haspopup="menu"
+            className="navMenuButton"
+            type="button"
+            onClick={() => toggleMenu("account")}
+          >
+            Account
+          </button>
+          {openMenu === "account" && (
+          <div className="navDropdown" role="menu">
+            {session && (
+              <Link href={role === "instructor" ? "/instructor-signup" : "/client-profile"} onClick={() => setOpenMenu(null)}>
+                My profile
+              </Link>
+            )}
+            <Link href="/instructors" onClick={() => setOpenMenu(null)}>Find Instructors</Link>
+            <Link href="/post-job" onClick={() => setOpenMenu(null)}>Post a Job</Link>
+            {session && role === "client" && <Link href="/my-jobs" onClick={() => setOpenMenu(null)}>My Jobs</Link>}
+            {session && <Link href="/messages" onClick={() => setOpenMenu(null)}>Messages</Link>}
+            {session && <Link href="/my-agreements" onClick={() => setOpenMenu(null)}>Agreements</Link>}
+            {session && role === "admin" && <Link href="/admin" onClick={() => setOpenMenu(null)}>Admin</Link>}
+            {session && role === "admin" && <Link href="/admin/checklist" onClick={() => setOpenMenu(null)}>Admin Checklist</Link>}
+            {!session && <Link href="/login" onClick={() => setOpenMenu(null)}>Sign in</Link>}
+          </div>
           )}
-          <Link href="/instructors" onClick={() => setOpenMenu(null)}>Find Instructors</Link>
-          <Link href="/post-job" onClick={() => setOpenMenu(null)}>Post a Job</Link>
-          {session && role === "client" && <Link href="/my-jobs" onClick={() => setOpenMenu(null)}>My Jobs</Link>}
-          {session && <Link href="/messages" onClick={() => setOpenMenu(null)}>Messages</Link>}
-          {session && <Link href="/my-agreements" onClick={() => setOpenMenu(null)}>Agreements</Link>}
-          {session && role === "admin" && <Link href="/admin" onClick={() => setOpenMenu(null)}>Admin</Link>}
-          {session && role === "admin" && <Link href="/admin/checklist" onClick={() => setOpenMenu(null)}>Admin Checklist</Link>}
-          {!session && <Link href="/login" onClick={() => setOpenMenu(null)}>Sign in</Link>}
         </div>
-        )}
-      </div>
-      <div className="navGroup" onMouseLeave={() => setOpenMenu(null)}>
-        <button
-          aria-expanded={openMenu === "instructors"}
-          aria-haspopup="menu"
-          className="navMenuButton"
-          type="button"
-          onClick={() => toggleMenu("instructors")}
-        >
-          Instructors
-        </button>
-        {openMenu === "instructors" && (
-        <div className="navDropdown" role="menu">
-          <Link href="/jobs" onClick={() => setOpenMenu(null)}>Instructor Jobs</Link>
-          <Link href="/instructor-signup" onClick={() => setOpenMenu(null)}>
-            {role === "instructor" ? "Instructor Profile" : "Become an Instructor"}
-          </Link>
+        <div className="navGroup" onMouseLeave={() => setOpenMenu(null)}>
+          <button
+            aria-expanded={openMenu === "instructors"}
+            aria-haspopup="menu"
+            className="navMenuButton"
+            type="button"
+            onClick={() => toggleMenu("instructors")}
+          >
+            Instructors
+          </button>
+          {openMenu === "instructors" && (
+          <div className="navDropdown" role="menu">
+            <Link href="/instructors" onClick={() => setOpenMenu(null)}>Find an Instructor</Link>
+            <Link href="/jobs" onClick={() => setOpenMenu(null)}>Instructor Jobs</Link>
+            <Link href="/instructor-signup" onClick={() => setOpenMenu(null)}>
+              {role === "instructor" ? "Instructor Profile" : "Become an Instructor"}
+            </Link>
+          </div>
+          )}
         </div>
-        )}
-      </div>
-      <div className="navGroup" onMouseLeave={() => setOpenMenu(null)}>
-        <button
-          aria-expanded={openMenu === "help"}
-          aria-haspopup="menu"
-          className="navMenuButton"
-          type="button"
-          onClick={() => toggleMenu("help")}
-        >
-          Help
-        </button>
-        {openMenu === "help" && (
-        <div className="navDropdown" role="menu">
-          <Link href="/faqs" onClick={() => setOpenMenu(null)}>FAQs</Link>
-          <Link href="/terms" onClick={() => setOpenMenu(null)}>Terms</Link>
-          <Link href="/privacy" onClick={() => setOpenMenu(null)}>Privacy</Link>
+        <div className="navGroup" onMouseLeave={() => setOpenMenu(null)}>
+          <button
+            aria-expanded={openMenu === "help"}
+            aria-haspopup="menu"
+            className="navMenuButton"
+            type="button"
+            onClick={() => toggleMenu("help")}
+          >
+            Help
+          </button>
+          {openMenu === "help" && (
+          <div className="navDropdown" role="menu">
+            <Link href="/faqs" onClick={() => setOpenMenu(null)}>FAQs</Link>
+            <Link href="/terms" onClick={() => setOpenMenu(null)}>Terms</Link>
+            <Link href="/privacy" onClick={() => setOpenMenu(null)}>Privacy</Link>
+          </div>
+          )}
         </div>
+        {session ? (
+          <button className="navButton" type="button" onClick={signOut}>
+            Sign out
+          </button>
+        ) : (
+          <Link href="/login">Log In</Link>
         )}
+        <Link className="navPostButton" href="/post-job">Post a Job</Link>
       </div>
-      {session ? (
-        <button className="navButton" type="button" onClick={signOut}>
-          Sign out
-        </button>
-      ) : (
-        <Link href="/login">Sign in</Link>
-      )}
     </div>
   );
 }

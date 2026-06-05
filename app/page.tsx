@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Footer from "../components/Footer";
+import Nav from "../components/Nav";
 import { serviceAreaOptions, styleOptions } from "../lib/instructorOptions";
 import { organizationJsonLd, websiteJsonLd } from "../lib/seo";
 
@@ -49,9 +50,7 @@ export default function Home() {
           __html: JSON.stringify([organizationJsonLd, websiteJsonLd]),
         }}
       />
-      <nav className="nav">
-        <img src="/logo-mark.png" className="logo" alt="BookAnInstructor" />
-      </nav>
+      <Nav />
 
       <section className="hero">
         <div className="heroText">
