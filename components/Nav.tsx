@@ -59,7 +59,7 @@ export default function Nav() {
 
   async function signOut() {
     await supabase.auth.signOut();
-    window.location.href = "/";
+    window.location.href = "https://bookaninstructor.com/";
   }
 
   function toggleMenu(menu: Exclude<OpenMenu, null>) {
