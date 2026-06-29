@@ -6,6 +6,12 @@ import Nav from "../../components/Nav";
 import { errorMessage, getOrCreateProfile } from "../../lib/profile";
 import { supabase } from "../../lib/supabase";
 
+function pathAfterLogin(role: string | null, next: string) {
+  if (role === "admin") return "/admin";
+  if (role) return next;
+  return `/onboarding?next=${encodeURIComponent(next)}`;
+}
+
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -20,7 +26,7 @@ function LoginContent() {
 
     try {
       const profile = await getOrCreateProfile(data.session);
-      router.replace(profile.role ? next : `/onboarding?next=${encodeURIComponent(next)}`);
+      router.replace(pathAfterLogin(profile.role, next));
     } catch (profileError) {
       setStatus("error");
       setMessage(

@@ -7,7 +7,13 @@ import { getOrCreateProfile, ProfileRole } from "../../lib/profile";
 import { supabase } from "../../lib/supabase";
 
 function pathForRole(role: ProfileRole) {
+  if (role === "admin") return "/admin";
   return role === "instructor" ? "/instructor-signup" : "/client-profile";
+}
+
+function pathForExistingRole(role: ProfileRole, next: string | null) {
+  if (role === "admin") return pathForRole(role);
+  return next || pathForRole(role);
 }
 
 function OnboardingContent() {
@@ -33,7 +39,7 @@ function OnboardingContent() {
         setUserId(profile.id);
 
         if (profile.role) {
-          router.replace(next || pathForRole(profile.role));
+          router.replace(pathForExistingRole(profile.role, next));
           return;
         }
       } catch (profileError) {
