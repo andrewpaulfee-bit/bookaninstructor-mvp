@@ -4,6 +4,23 @@ drop policy if exists "Admins can view all client requests" on public.client_req
 drop policy if exists "Admins can update client requests" on public.client_requests;
 drop policy if exists "Admins can view all booking agreements" on public.booking_agreements;
 
+update public.instructors
+set review_status = case
+  when approved = true then 'approved'
+  else 'pending_review'
+end
+where review_status is null;
+
+update public.instructors
+set approved = true
+where review_status = 'approved'
+  and approved is distinct from true;
+
+update public.instructors
+set approved = false
+where review_status in ('pending_review', 'needs_changes', 'rejected')
+  and approved is distinct from false;
+
 create policy "Admins can view all instructor profiles"
 on public.instructors
 for select
