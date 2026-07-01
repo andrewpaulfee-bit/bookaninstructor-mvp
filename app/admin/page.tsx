@@ -97,33 +97,29 @@ export default function Admin() {
 
   useEffect(() => {
     async function loadAdminData() {
-      const [requestResult, instructorResult, agreementResult] = await Promise.all([
-        supabase
-        .from("client_requests")
-        .select("*, selected_instructor:instructors(name)")
-          .order("created_at", { ascending: false }),
-        supabase
-          .from("instructors")
-          .select("*")
-          .order("created_at", { ascending: false }),
-        supabase
-          .from("booking_agreements")
-          .select("id,contract_number,request_id,job_title,client_name,client_organisation,instructor_name,total_fee,instructor_payout,payment_status,class_completed_at,client_review_submitted_at,instructor_review_submitted_at,payout_status")
-          .order("created_at", { ascending: false }),
-      ]);
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
 
-      if (requestResult.error || instructorResult.error || agreementResult.error) {
-        setError(
-          requestResult.error?.message ||
-            instructorResult.error?.message ||
-            agreementResult.error?.message ||
-            "Could not load admin data."
-        );
+      if (!token) {
+        setError("Please sign in before loading admin data.");
+        setLoading(false);
+        return;
+      }
+
+      const response = await fetch("/api/admin/dashboard", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const result = await response.json();
+
+      if (!response.ok) {
+        setError(result.error || "Could not load admin data.");
       } else {
-        setRequests(requestResult.data || []);
-        setInstructors(instructorResult.data || []);
+        setRequests(result.requests || []);
+        setInstructors(result.instructors || []);
         setAgreements(
-          ((agreementResult.data || []) as Omit<
+          ((result.agreements || []) as Omit<
           Agreement,
             | "payout_approved_at"
             | "payout_paid_at"
