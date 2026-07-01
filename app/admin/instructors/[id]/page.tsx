@@ -47,53 +47,75 @@ export default function AdminInstructorReview() {
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
 
+  async function getAuthHeaders() {
+    const { data: sessionData } = await supabase.auth.getSession();
+    const token = sessionData.session?.access_token;
+
+    if (!token) {
+      throw new Error("Please sign in first.");
+    }
+
+    return {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+  }
+
+  function applyInstructorData(data: Record<string, any>) {
+    setForm({
+      first_name: data.first_name || "",
+      last_name: data.last_name || "",
+      name: data.name || "",
+      email: data.email || "",
+      mobile: data.mobile || "",
+      location: data.location || "",
+      country: data.country || "Australia",
+      bio: data.bio || "",
+      hourly_rate: data.hourly_rate ? String(data.hourly_rate) : "",
+      date_of_birth: data.date_of_birth || "",
+      abn: data.abn || "",
+      registered_for_gst: Boolean(data.registered_for_gst),
+      working_with_children_card: data.working_with_children_card || "",
+      working_with_children_expiry: data.working_with_children_expiry || "",
+      review_status: data.review_status || (data.approved ? "approved" : "pending_review"),
+      review_notes: data.review_notes || "",
+    });
+    setCategories(data.categories || []);
+    setServiceAreas(data.service_areas || []);
+    setFiles({
+      headshot_url: data.headshot_url || "",
+      profile_video_url: data.profile_video_url || "",
+    });
+    setPayoutSetup({
+      stripe_connect_account_id: data.stripe_connect_account_id || "",
+      stripe_connect_onboarding_complete: Boolean(data.stripe_connect_onboarding_complete),
+      stripe_connect_charges_enabled: Boolean(data.stripe_connect_charges_enabled),
+      stripe_connect_payouts_enabled: Boolean(data.stripe_connect_payouts_enabled),
+      stripe_connect_requirements_due: data.stripe_connect_requirements_due || [],
+      stripe_connect_updated_at: data.stripe_connect_updated_at || "",
+    });
+  }
+
   useEffect(() => {
     async function loadInstructor() {
-      const { data, error } = await supabase
-        .from("instructors")
-        .select("*")
-        .eq("id", params.id)
-        .maybeSingle();
+      try {
+        const response = await fetch(`/api/admin/instructors/${params.id}`, {
+          headers: await getAuthHeaders(),
+        });
+        const result = await response.json();
 
-      if (error || !data) {
+        if (!response.ok || !result.instructor) {
+          throw new Error(result.error || "Instructor not found.");
+        }
+
+        applyInstructorData(result.instructor);
+      } catch (error) {
         setIsError(true);
-        setMessage(error?.message || "Instructor not found.");
+        setMessage(error instanceof Error ? error.message : "Instructor not found.");
         setLoading(false);
         return;
       }
 
-      setForm({
-        first_name: data.first_name || "",
-        last_name: data.last_name || "",
-        name: data.name || "",
-        email: data.email || "",
-        mobile: data.mobile || "",
-        location: data.location || "",
-        country: data.country || "Australia",
-        bio: data.bio || "",
-        hourly_rate: data.hourly_rate ? String(data.hourly_rate) : "",
-        date_of_birth: data.date_of_birth || "",
-        abn: data.abn || "",
-        registered_for_gst: Boolean(data.registered_for_gst),
-        working_with_children_card: data.working_with_children_card || "",
-        working_with_children_expiry: data.working_with_children_expiry || "",
-        review_status: data.review_status || (data.approved ? "approved" : "pending_review"),
-        review_notes: data.review_notes || "",
-      });
-      setCategories(data.categories || []);
-      setServiceAreas(data.service_areas || []);
-      setFiles({
-        headshot_url: data.headshot_url || "",
-        profile_video_url: data.profile_video_url || "",
-      });
-      setPayoutSetup({
-        stripe_connect_account_id: data.stripe_connect_account_id || "",
-        stripe_connect_onboarding_complete: Boolean(data.stripe_connect_onboarding_complete),
-        stripe_connect_charges_enabled: Boolean(data.stripe_connect_charges_enabled),
-        stripe_connect_payouts_enabled: Boolean(data.stripe_connect_payouts_enabled),
-        stripe_connect_requirements_due: data.stripe_connect_requirements_due || [],
-        stripe_connect_updated_at: data.stripe_connect_updated_at || "",
-      });
       setLoading(false);
     }
 
@@ -142,37 +164,44 @@ export default function AdminInstructorReview() {
     const approved = reviewStatus === "approved";
     const name = form.name || `${form.first_name} ${form.last_name}`.trim();
 
-    const { error } = await supabase
-      .from("instructors")
-      .update({
-        first_name: form.first_name,
-        last_name: form.last_name,
-        name,
-        email: form.email,
-        mobile: form.mobile || null,
-        location: form.location || null,
-        country: form.country || null,
-        bio: form.bio || null,
-        hourly_rate: form.hourly_rate ? Number(form.hourly_rate) : null,
-        date_of_birth: form.date_of_birth || null,
-        abn: form.abn || null,
-        registered_for_gst: form.registered_for_gst,
-        working_with_children_card: form.working_with_children_card || null,
-        working_with_children_expiry: form.working_with_children_expiry || null,
-        categories,
-        service_areas: serviceAreas,
-        approved,
-        review_status: reviewStatus,
-        review_notes: form.review_notes || null,
-      })
-      .eq("id", params.id);
+    const response = await fetch(`/api/admin/instructors/${params.id}`, {
+      method: "PATCH",
+      headers: await getAuthHeaders(),
+      body: JSON.stringify({
+        updates: {
+          first_name: form.first_name,
+          last_name: form.last_name,
+          name,
+          email: form.email,
+          mobile: form.mobile || null,
+          location: form.location || null,
+          country: form.country || null,
+          bio: form.bio || null,
+          hourly_rate: form.hourly_rate ? Number(form.hourly_rate) : null,
+          date_of_birth: form.date_of_birth || null,
+          abn: form.abn || null,
+          registered_for_gst: form.registered_for_gst,
+          working_with_children_card: form.working_with_children_card || null,
+          working_with_children_expiry: form.working_with_children_expiry || null,
+          categories,
+          service_areas: serviceAreas,
+          approved,
+          review_status: reviewStatus,
+          review_notes: form.review_notes || null,
+        },
+      }),
+    });
+    const result = await response.json();
 
-    if (error) {
+    if (!response.ok) {
       setIsError(true);
-      setMessage(error.message);
+      setMessage(result.error || "Could not save instructor.");
       return;
     }
 
+    if (result.instructor) {
+      applyInstructorData(result.instructor);
+    }
     setForm((current) => ({ ...current, name, review_status: reviewStatus }));
     await notifyStatus(reviewStatus);
     setMessage(approved ? "Instructor approved and published." : "Instructor saved.");
